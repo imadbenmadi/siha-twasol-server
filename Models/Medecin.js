@@ -40,7 +40,7 @@ const Medecin = sequelize.define("Medecin", {
         allowNull: true,
     },
 });
-const Malads = sequelize.define("Malads", {
+const Medecin_Malads = sequelize.define("Medecin_Malads", {
     maladId: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -50,7 +50,7 @@ const Malads = sequelize.define("Malads", {
         allowNull: false,
     },
 });
-Medecin.hasMany(Malads, { foreignKey: "medecinId" });
+Medecin.hasMany(Medecin_Malads, { foreignKey: "medecinId" });
 
 Medecin.belongsTo(Company, { foreignKey: "companyId" });
 Medecin.belongsTo(Service, { foreignKey: "serviceId" });

@@ -38,8 +38,6 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
-
 app.use("/", express.static(path.join(__dirname, "/public")));
 app.use("/", express.static(path.join(__dirname, "/public/ProfilePics")));
 app.use("/", express.static(path.join(__dirname, "/public/Work")));
@@ -55,8 +53,18 @@ app.use("/Admin_Login", require("./Routes/Auth/Admin/Admin_Login"));
 app.use("/Add_Admin", require("./Routes/Auth/Admin/Admin_Add"));
 // app.use("/Admin_Logout", require("./Routes/Auth/Admin/Admin_Logout"));
 app.use("/Admin_CheckAuth", require("./Routes/Auth/Admin/Admin_CheckAuth"));
-
-
+const { Event } = require("./Models/Event");
+const { Adv } = require("./Models/Adv");
+const { Blog } = require("./Models/Blog");
+const { Company } = require("./Models/Company");
+const { Contact_Messages } = require("./Models/Contact_Messages");
+const { Malad } = require("./Models/Malad");
+const { Medecin } = require("./Models/Medecin");
+const { Messages } = require("./Models/Messages");
+const { Modir } = require("./Models/Modir");
+const { Rates } = require("./Models/Rates");
+const { RefreshTokens } = require("./Models/RefreshTokens");
+const { Worker } = require("./Models/Worker");
 
 app.listen(3000);
 

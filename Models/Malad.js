@@ -45,7 +45,4 @@ const Followings = sequelize.define("Following", {
 });
 Malad.hasMany(Followings, { foreignKey: "patientId" });
 
-
-Malad.belongsTo(Company, { foreignKey: "companyId" });
-Malad.belongsTo(Service, { foreignKey: "serviceId" });
 module.exports = { Malad, Followings };
