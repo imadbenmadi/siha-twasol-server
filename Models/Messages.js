@@ -28,4 +28,11 @@ Malad.hasMany(Message, { foreignKey: "senderId" });
 Medecin.hasMany(Message, { foreignKey: "senderId" });
 Message.belongsTo(Malad, { foreignKey: "senderId" });
 Message.belongsTo(Medecin, { foreignKey: "senderId" });
+
+Malad.hasMany(Message, { foreignKey: "receiverId" });
+Medecin.hasMany(Message, { foreignKey: "receiverId" });
+Message.belongsTo(Malad, { foreignKey: "receiverId" });
+Message.belongsTo(Medecin, { foreignKey: "receiverId" });
+
+
 module.exports = { Message };
