@@ -32,4 +32,12 @@ const Medicin_Rates = sequelize.define("Medicin_Rates", {
 });
 Malad.hasMany(Malad_Rates, { foreignKey: "maladId" });
 Medecin.hasMany(Medicin_Rates, { foreignKey: "medicinId" });
+Malad.hasMany(Medicin_Rates, { foreignKey: "maladId" });
+Medecin.hasMany(Malad_Rates, { foreignKey: "medicinId" });
+
+Malad_Rates.belongsTo(Malad, { foreignKey: "maladId" });
+Malad_Rates.belongsTo(Medecin, { foreignKey: "medicinId" });
+Medicin_Rates.belongsTo(Malad, { foreignKey: "maladId" });
+Medicin_Rates.belongsTo(Medecin, { foreignKey: "medicinId" });
+
 module.exports = { Malad_Rates, Medicin_Rates };
