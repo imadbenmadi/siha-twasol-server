@@ -22,19 +22,19 @@ router.get("/", adminMiddleware, async (req, res) => {
         });
 
         // Add userType to each user object
-        const freelancerUsers = malads.map((freelancer) => ({
-            ...freelancer.toJSON(),
-            userType: "freelancer",
+        const maladUsers = malads.map((malad) => ({
+            ...malad.toJSON(),
+            userType: "malad",
         }));
-        const clientUsers = medicins.map((client) => ({
-            ...client.toJSON(),
-            userType: "client",
+        const medicinUsers = medicins.map((medicin) => ({
+            ...medicin.toJSON(),
+            userType: "medicin",
         }));
         const workerUsers = workers.map((worker) => ({
             ...worker.toJSON(),
             userType: "worker",
         }));
-        const users = [...freelancerUsers, ...clientUsers, ...workerUsers];
+        const users = [...maladUsers, ...medicinUsers, ...workerUsers];
 
         users.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
