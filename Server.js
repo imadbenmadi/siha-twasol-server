@@ -65,6 +65,7 @@ const { Modir } = require("./Models/Modir");
 const { Rates } = require("./Models/Rates");
 const { RefreshTokens } = require("./Models/RefreshTokens");
 const { Worker } = require("./Models/Worker");
+app.use("/Privacy", require("./Routes/Privacy"));
 
 app.listen(3000);
 
