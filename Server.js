@@ -46,8 +46,8 @@ app.use("/", express.static(path.join(__dirname, "/Public/Portfolio")));
 app.get("/", (req, res) => {
     res.send("Hello from DzidCom");
 });
+app.use("/Contact", require("./Routes/Contact"));
 app.use("/Logout", require("./Routes/Auth/Logout"));
-
 app.use("/Admin", require("./Routes/Admin/Admin"));
 app.use("/Admin_Login", require("./Routes/Auth/Admin/Admin_Login"));
 app.use("/Add_Admin", require("./Routes/Auth/Admin/Admin_Add"));
