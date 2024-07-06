@@ -2,38 +2,48 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const { Freelancers } = require("../../Models/Freelnacer");
+const { Director } = require("../../Models/Director");
+const { Malad } = require("../../Models/Malad");
+const { Medecin } = require("../../Models/Medecin");
+const { Worker } = require("../../Models/Worker");
 const { Refresh_tokens } = require("../../Models/RefreshTokens");
-const { Clients } = require("../../Models/Client");
 
 router.get("/", async (req, res) => {
     const {
-        Freelancer_ACCESS_TOKEN_SECRET,
-        Freelancer_REFRESH_TOKEN_SECRET,
-        Client_ACCESS_TOKEN_SECRET,
-        Client_REFRESH_TOKEN_SECRET,
+        Director_ACCESS_TOKEN_SECRET,
+        Director_REFRESH_TOKEN_SECRET,
+        Malad_ACCESS_TOKEN_SECRET,
+        Malad_REFRESH_TOKEN_SECRET,
+        Medecin_ACCESS_TOKEN_SECRET,
+        Medecin_REFRESH_TOKEN_SECRET,
+        Worker_ACCESS_TOKEN_SECRET,
+        Worker_REFRESH_TOKEN_SECRET,
     } = process.env;
 
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
+
     if (!accessToken || !refreshToken) {
-        if (accessToken)
+        if (accessToken) {
             res.clearCookie("accessToken", {
                 httpOnly: true,
                 sameSite: "None",
                 secure: true,
             });
-        if (refreshToken)
+        }
+        if (refreshToken) {
             res.clearCookie("refreshToken", {
                 httpOnly: true,
                 sameSite: "None",
                 secure: true,
             });
-        
+        }
+
         return res.status(401).json({
-            message: "Unauthorized : No tokens found",
+            message: "Unauthorized: No tokens found",
         });
     }
+
     const verifyToken = (token, secret) => {
         return new Promise((resolve, reject) => {
             jwt.verify(token, secret, (err, decoded) => {
@@ -52,8 +62,6 @@ router.get("/", async (req, res) => {
         accessTokenSecret
     ) => {
         if (!refreshToken) {
-            // res.clearCookie("accessToken");
-            // res.clearCookie("refreshToken");
             return res.status(401).json({
                 message: "Unauthorized: Refresh token is missing",
             });
@@ -62,9 +70,8 @@ router.get("/", async (req, res) => {
         const found_in_DB = await Refresh_tokens.findOne({
             where: { token: refreshToken },
         });
+
         if (!found_in_DB) {
-            // res.clearCookie("accessToken");
-            // res.clearCookie("refreshToken");
             return res.status(401).json({
                 message: "Unauthorized: Invalid refresh token",
             });
@@ -76,8 +83,6 @@ router.get("/", async (req, res) => {
                 refreshTokenSecret,
                 async (err, decoded) => {
                     if (err) {
-                        // res.clearCookie("accessToken");
-                        // res.clearCookie("refreshToken");
                         return res.status(401).json({
                             message: "Unauthorized: Invalid refresh token",
                         });
@@ -96,26 +101,32 @@ router.get("/", async (req, res) => {
                         maxAge: 60 * 60 * 1000, // 1 hour in milliseconds
                     });
 
-                    let user = await Freelancers.findOne({
-                        where: { id: decoded.userId },
-                    });
-                    let userType = "freelancer";
-
-                    if (!user) {
-                        user = await Clients.findOne({
+                    let user;
+                    if (decoded.userType === "Director") {
+                        user = await Director.findOne({
                             where: { id: decoded.userId },
                         });
-                        userType = "client";
+                    } else if (decoded.userType === "Malad") {
+                        user = await Malad.findOne({
+                            where: { id: decoded.userId },
+                        });
+                    } else if (decoded.userType === "Medecin") {
+                        user = await Medecin.findOne({
+                            where: { id: decoded.userId },
+                        });
+                    } else if (decoded.userType === "Worker") {
+                        user = await Worker.findOne({
+                            where: { id: decoded.userId },
+                        });
                     }
 
                     if (!user) {
-                        // res.clearCookie("accessToken");
-                        // res.clearCookie("refreshToken");
                         return res.status(404).json({
                             message: "Unauthorized: User not found",
                         });
                     }
-                    resolve({ userType, userId: user.id });
+
+                    resolve({ userType: decoded.userType, userId: user.id });
                 }
             );
         });
@@ -126,68 +137,118 @@ router.get("/", async (req, res) => {
         let userType;
         let user;
 
-        // First check as a freelancer
+        // Check as Director
         try {
-            // if (!accessToken) throw new Error("No access token found");
             decoded = await verifyToken(
                 accessToken,
-                Freelancer_ACCESS_TOKEN_SECRET
+                Director_ACCESS_TOKEN_SECRET
             );
-            user = await Freelancers.findOne({ where: { id: decoded.userId } });
-            userType = "freelancer";
+            user = await Director.findOne({ where: { id: decoded.userId } });
+            userType = "Director";
         } catch (err) {
             if (err.name === "TokenExpiredError" || !accessToken) {
                 try {
                     const result = await handleTokenExpired(
                         refreshToken,
-                        Freelancer_REFRESH_TOKEN_SECRET,
-                        Freelancer_ACCESS_TOKEN_SECRET
+                        Director_REFRESH_TOKEN_SECRET,
+                        Director_ACCESS_TOKEN_SECRET
                     );
-                    return res.status(200);
-                    //     .json({
-                    //     message:
-                    //         "check auth true, Access token refreshed successfully",
-                    //     // ..result,
-                    // });
+                    return res.status(200).json({
+                        message:
+                            "check auth true, Access token refreshed successfully",
+                    });
                 } catch (err) {
-                    console.log("Error refreshing freelancer token:", err);
+                    console.log("Error refreshing Director token:", err);
                 }
             }
         }
 
-        // If not a freelancer, check as a client
+        // Check as Malad
         if (!user) {
             try {
                 decoded = await verifyToken(
                     accessToken,
-                    Client_ACCESS_TOKEN_SECRET
+                    Malad_ACCESS_TOKEN_SECRET
                 );
-                user = await Clients.findOne({ where: { id: decoded.userId } });
-                userType = "client";
+                user = await Malad.findOne({ where: { id: decoded.userId } });
+                userType = "Malad";
             } catch (err) {
                 if (err.name === "TokenExpiredError" || !accessToken) {
                     try {
                         const result = await handleTokenExpired(
                             refreshToken,
-                            Client_REFRESH_TOKEN_SECRET,
-                            Client_ACCESS_TOKEN_SECRET
+                            Malad_REFRESH_TOKEN_SECRET,
+                            Malad_ACCESS_TOKEN_SECRET
                         );
                         return res.status(200).json({
                             message:
                                 "check auth true, Access token refreshed successfully",
-                            // ..result,
                         });
                     } catch (err) {
-                        console.log("Error refreshing client token:", err);
+                        console.log("Error refreshing Malad token:", err);
                     }
                 }
             }
         }
 
-        // If no user found for both freelancer and client
+        // Check as Medecin
         if (!user) {
-            // res.clearCookie("accessToken");
-            // res.clearCookie("refreshToken");
+            try {
+                decoded = await verifyToken(
+                    accessToken,
+                    Medecin_ACCESS_TOKEN_SECRET
+                );
+                user = await Medecin.findOne({ where: { id: decoded.userId } });
+                userType = "Medecin";
+            } catch (err) {
+                if (err.name === "TokenExpiredError" || !accessToken) {
+                    try {
+                        const result = await handleTokenExpired(
+                            refreshToken,
+                            Medecin_REFRESH_TOKEN_SECRET,
+                            Medecin_ACCESS_TOKEN_SECRET
+                        );
+                        return res.status(200).json({
+                            message:
+                                "check auth true, Access token refreshed successfully",
+                        });
+                    } catch (err) {
+                        console.log("Error refreshing Medecin token:", err);
+                    }
+                }
+            }
+        }
+
+        // Check as Worker
+        if (!user) {
+            try {
+                decoded = await verifyToken(
+                    accessToken,
+                    Worker_ACCESS_TOKEN_SECRET
+                );
+                user = await Worker.findOne({ where: { id: decoded.userId } });
+                userType = "Worker";
+            } catch (err) {
+                if (err.name === "TokenExpiredError" || !accessToken) {
+                    try {
+                        const result = await handleTokenExpired(
+                            refreshToken,
+                            Worker_REFRESH_TOKEN_SECRET,
+                            Worker_ACCESS_TOKEN_SECRET
+                        );
+                        return res.status(200).json({
+                            message:
+                                "check auth true, Access token refreshed successfully",
+                        });
+                    } catch (err) {
+                        console.log("Error refreshing Worker token:", err);
+                    }
+                }
+            }
+        }
+
+        // If no user found for any user type
+        if (!user) {
             return res
                 .status(401)
                 .json({ message: "Unauthorized: Invalid access token" });
@@ -200,9 +261,7 @@ router.get("/", async (req, res) => {
         });
     } catch (err) {
         console.log(err);
-        // res.clearCookie("accessToken");
-        // res.clearCookie("refreshToken");
-        // return res.status(500).json({ message: err.message });
+        return res.status(500).json({ message: err.message });
     }
 });
 
