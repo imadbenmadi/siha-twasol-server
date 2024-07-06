@@ -23,17 +23,28 @@ const Malad = sequelize.define("Malad", {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    speciality: {
-        type: DataTypes.STRING,
-        allowNull: false,
+    birthDate: {
+        type: DataTypes.DATE,
+        allowNull: true,
     },
-
+    adress: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    gender: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    about: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     profile_pic_link: {
         type: DataTypes.STRING,
         allowNull: true,
     },
 });
-const Followings = sequelize.define("Following", {
+const malad_follow = sequelize.define("malad_follow", {
     companyId: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -43,6 +54,6 @@ const Followings = sequelize.define("Following", {
         allowNull: false,
     },
 });
-Malad.hasMany(Followings, { foreignKey: "patientId" });
+Malad.hasMany(malad_follow, { foreignKey: "patientId" });
 
-module.exports = { Malad, Followings };
+module.exports = { Malad, malad_follow };

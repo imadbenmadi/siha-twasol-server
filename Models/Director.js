@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/db_connection");
 const { Company } = require("./Company");
-const Modir = sequelize.define("Modir", {
+const Director = sequelize.define("Director", {
     email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -16,6 +16,6 @@ const Modir = sequelize.define("Modir", {
     },
 });
 
-Company.belongsTo(Modir, { foreignKey: "companyId" });
+Company.belongsTo(Director, { foreignKey: "companyId" });
 
-module.exports = { Modir };
+module.exports = { Director };

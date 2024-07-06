@@ -19,7 +19,7 @@ const Blog = sequelize.define("Blog", {
         allowNull: false,
     },
     ownerType: {
-        type: DataTypes.ENUM("Modir", "Medicin"),
+        type: DataTypes.STRING,
         allowNull: false,
     },
     companyId: {

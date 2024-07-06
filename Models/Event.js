@@ -19,7 +19,7 @@ const Event = sequelize.define("Event", {
         allowNull: false,
     },
     ownerType: {
-        type: DataTypes.ENUM("Modir", "Worker"),
+        type: DataTypes.STRING,
         allowNull: false,
     },
     companyId: {

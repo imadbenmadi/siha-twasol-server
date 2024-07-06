@@ -6,7 +6,7 @@ const Refresh_tokens = sequelize.define("Refresh_tokens", {
         allowNull: false,
     },
     userType: {
-        type: DataTypes.ENUM("freelancer", "client"),
+        type: DataTypes.STRING,
         allowNull: true,
     },
     token: {

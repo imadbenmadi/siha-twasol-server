@@ -46,8 +46,12 @@ app.use("/", express.static(path.join(__dirname, "/Public/Portfolio")));
 app.get("/", (req, res) => {
     res.send("Hello from DzidCom");
 });
-app.use("/Contact", require("./Routes/Contact"));
+app.use("/check_Auth", require("./Routes/Auth/check_Auth"));
+app.use("/Login", require("./Routes/Auth/Login"));
+app.use("/Register", require("./Routes/Auth/Register"));
 app.use("/Logout", require("./Routes/Auth/Logout"));
+
+app.use("/Contact", require("./Routes/Contact"));
 app.use("/Admin", require("./Routes/Admin/Admin"));
 app.use("/Admin_Login", require("./Routes/Auth/Admin/Admin_Login"));
 app.use("/Add_Admin", require("./Routes/Auth/Admin/Admin_Add"));
@@ -61,7 +65,7 @@ const { Contact_Messages } = require("./Models/Contact_Messages");
 const { Malad } = require("./Models/Malad");
 const { Medecin } = require("./Models/Medecin");
 const { Messages } = require("./Models/Messages");
-const { Modir } = require("./Models/Modir");
+const { Director } = require("./Models/Director");
 const { Rates } = require("./Models/Rates");
 const { RefreshTokens } = require("./Models/RefreshTokens");
 const { Worker } = require("./Models/Worker");

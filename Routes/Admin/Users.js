@@ -46,19 +46,19 @@ router.get("/", adminMiddleware, async (req, res) => {
     }
 });
 router.get("/Medecins/:id", adminMiddleware, async (req, res) => {
-    const medcinId = req.params.id;
-    if (!medcinId)
-        return res.status(409).json({ message: "medcin ID is required" });
+    const MedecinId = req.params.id;
+    if (!MedecinId)
+        return res.status(409).json({ message: "Medecin ID is required" });
     try {
-        const medcin = await Medecin.findOne({
-            where: { id: medcinId },
+        const Medecin = await Medecin.findOne({
+            where: { id: MedecinId },
             attributes: { exclude: ["password"] },
         });
-        if (!medcin)
-            return res.status(404).json({ message: "medcin not found" });
-        res.status(200).json({ user: medcin });
+        if (!Medecin)
+            return res.status(404).json({ message: "Medecin not found" });
+        res.status(200).json({ user: Medecin });
     } catch (err) {
-        console.error("Error fetching medcin:", err);
+        console.error("Error fetching Medecin:", err);
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
@@ -143,19 +143,19 @@ router.delete("/Malads/:id", adminMiddleware, async (req, res) => {
     }
 });
 router.delete("/Medecins/:id", adminMiddleware, async (req, res) => {
-    const medcinId = req.params.id;
-    if (!medcinId)
-        return res.status(409).json({ message: "medcin ID is required" });
+    const MedecinId = req.params.id;
+    if (!MedecinId)
+        return res.status(409).json({ message: "Medecin ID is required" });
     try {
-        const medcin = await Medecin.findOne({
-            where: { id: medcinId },
+        const Medecin = await Medecin.findOne({
+            where: { id: MedecinId },
         });
-        if (!medcin)
-            return res.status(404).json({ message: "medcin not found" });
-        await Medecin.destroy({ where: { id: medcinId } });
-        res.status(200).json({ message: "medcin deleted successfully" });
+        if (!Medecin)
+            return res.status(404).json({ message: "Medecin not found" });
+        await Medecin.destroy({ where: { id: MedecinId } });
+        res.status(200).json({ message: "Medecin deleted successfully" });
     } catch (err) {
-        console.error("Error fetching deleting medcin:", err);
+        console.error("Error fetching deleting Medecin:", err);
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
