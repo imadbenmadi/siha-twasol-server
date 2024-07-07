@@ -43,14 +43,38 @@ router.get("/:id", Admin_midllware, async (req, res) => {
 });
 
 router.post("/", Admin_midllware, async (req, res) => {
+    const { Name, Location, Wilaya, Type, director_email, director_password } =
+        req.body;
+    if (
+        !Name ||
+        !Location ||
+        !Wilaya ||
+        !Type ||
+        !director_email ||
+        !director_password
+    ) {
+        return res.status(400).json({ message: "Missing required fields" });
+    }
+
     try {
-        const company = await Company.create(req.body);
-        res.status(201).json({ company });
+        const company = await Company.create({
+            Name,
+            Location,
+            Wilaya,
+            Type,
+        });
+        await Director.create({
+            email: director_email,
+            password: director_password,
+            companyId: company.id,
+        });
+        res.status(200).json({ message: "Company created", company });
     } catch (err) {
         console.error("Error fetching Project Applications:", err);
         res.status(500).json({ message: err });
     }
 });
+
 router.delete("/:id", Admin_midllware, async (req, res) => {
     try {
         const company = await Company.findOne({
