@@ -28,5 +28,6 @@ const Service = sequelize.define("Service", {
         allowNull: false,
     },
 });
-Company.hasMany(Service, { foreignKey: "companyId" });
+Company.hasMany(Service, { foreignKey: "companyId", as: "Services" });
+Service.belongsTo(Company, { foreignKey: "companyId" });
 module.exports = { Company, Service };

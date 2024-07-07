@@ -16,6 +16,7 @@ const Director = sequelize.define("Director", {
     },
 });
 
-Company.belongsTo(Director, { foreignKey: "companyId" });
+Company.hasMany(Director, { foreignKey: "companyId", as: "Directors" });
+Director.belongsTo(Company, { foreignKey: "companyId" });
 
 module.exports = { Director };

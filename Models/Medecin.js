@@ -51,7 +51,11 @@ const Medecin_Malads = sequelize.define("Medecin_Malads", {
     },
 });
 Medecin.hasMany(Medecin_Malads, { foreignKey: "medecinId" });
+Medecin_Malads.belongsTo(Medecin, { foreignKey: "medecinId" });
 
+Company.hasMany(Medecin, { foreignKey: "companyId", as: "Medecins" });
 Medecin.belongsTo(Company, { foreignKey: "companyId" });
+
+Service.hasMany(Medecin, { foreignKey: "serviceId", as: "Medecins" });
 Medecin.belongsTo(Service, { foreignKey: "serviceId" });
 module.exports = { Medecin };
