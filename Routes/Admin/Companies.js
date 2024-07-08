@@ -7,7 +7,7 @@ const { Director } = require("../../Models/Director");
 const { Worker } = require("../../Models/Worker");
 const { Medecin } = require("../../Models/Medecin");
 const { malad_follow } = require("../../Models/Malad");
-
+const { Malad } = require("../../Models/Malad");
 const Admin_midllware = require("../../Middlewares/Admin");
 
 router.get("/", Admin_midllware, async (req, res) => {
@@ -56,9 +56,49 @@ router.post("/", Admin_midllware, async (req, res) => {
         !director_password
     ) {
         return res.status(400).json({ message: "Missing required fields" });
+    } else if (Name < 3) {
+        return res.status(409).json({
+            message: "Name must be more that 3 chars",
+        });
+    } else if (Location < 3) {
+        return res.status(409).json({
+            message: "Location must be more that 3 chars",
+        });
+    } else if (Wilaya < 3) {
+        return res.status(409).json({
+            message: "Wilaya must be more that 3 chars",
+        });
+    } else if (Type < 3) {
+        return res.status(409).json({
+            message: "Type must be more that 3 chars",
+        });
+    } else if (director_password.length < 8) {
+        return res.status(409).json({
+            message: "password must be at least 8 characters",
+        });
+    } else if (
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(director_email)
+    ) {
+        return res.status(409).json({ message: "Invalid email" });
     }
-
     try {
+        const exist_medicin = await Medecin.findOne({
+            where: { email: director_email },
+        });
+        const exist_doctor = await Director.findOne({
+            where: { email: director_email },
+        });
+        const exist_worker = await Worker.findOne({
+            where: { email: director_email },
+        });
+        const exist_malad = await Malad.findOne({
+            where: { email: director_email },
+        });
+        if (exist_malad || exist_medicin || exist_doctor || exist_worker) {
+            return res.status(400).json({
+                message: "email already exists , please use another email.",
+            });
+        }
         const company = await Company.create({
             Name,
             Location,
