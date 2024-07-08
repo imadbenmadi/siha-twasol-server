@@ -38,16 +38,16 @@ const handleRegister = async (req, res) => {
         const exist_medicin = await Medecin.findOne({
             where: { email: email },
         });
-        const exist_doctor = await Director.findOne({
-            where: { email: email },
-        });
         const exist_worker = await Worker.findOne({
             where: { email: email },
         });
         const exist_malad = await Malad.findOne({
             where: { email: email },
         });
-        if (exist_malad || exist_medicin || exist_doctor || exist_worker) {
+        const exist_director = await Director.findOne({
+            where: { email: email },
+        });
+        if (exist_malad || exist_medicin || exist_director || exist_worker) {
             return res.status(400).json({
                 message: "email already exists , please use another email.",
             });

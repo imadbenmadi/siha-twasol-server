@@ -3,7 +3,6 @@ const router = express.Router();
 const { Company } = require("../../Models/Company");
 const { Service } = require("../../Models/Company");
 const { Director } = require("../../Models/Director");
-
 const { Worker } = require("../../Models/Worker");
 const { Medecin } = require("../../Models/Medecin");
 const { malad_follow } = require("../../Models/Malad");
@@ -37,6 +36,7 @@ router.get("/:id", Admin_midllware, async (req, res) => {
                 { model: malad_follow, as: "malad_follows" },
             ],
         });
+
         if (!company) {
             return res.status(404).json({ message: "Company not found" });
         }
@@ -88,16 +88,22 @@ router.post("/", Admin_midllware, async (req, res) => {
         const exist_medicin = await Medecin.findOne({
             where: { email: director_email },
         });
-        const exist_doctor = await Director.findOne({
-            where: { email: director_email },
-        });
         const exist_worker = await Worker.findOne({
             where: { email: director_email },
         });
         const exist_malad = await Malad.findOne({
             where: { email: director_email },
         });
-        if (exist_malad || exist_medicin || exist_doctor || exist_worker) {
+        const exist_director = await Director.findOne({
+            where: { email: director_email },
+        });
+
+        if (
+            exist_malad ||
+            exist_medicin ||
+            exist_worker ||
+            exist_director
+        ) {
             return res.status(400).json({
                 message: "email already exists , please use another email.",
             });
@@ -143,6 +149,8 @@ router.put("/:id", Admin_midllware, async (req, res) => {
     if (!req.params.id || req.params.id < 1 || isNaN(req.params.id)) {
         return res.status(400).json({ message: "Missing required fields" });
     }
+    const { Name, Location, Wilaya, Type, director_email, director_password } =
+        req.body;
     try {
         const company = await Company.findOne({
             where: { id: req.params.id },
@@ -150,7 +158,24 @@ router.put("/:id", Admin_midllware, async (req, res) => {
         if (!company) {
             return res.status(404).json({ message: "Company not found" });
         }
-        await company.update(req.body);
+        if (!Name || !Location || !Wilaya || !Type) {
+            return res.status(400).json({ message: "Missing required fields" });
+        }
+
+        await company.update({
+            Name,
+            Location,
+            Wilaya,
+            Type,
+        });
+        if (director_email || director_password)
+            await Director.update(
+                {
+                    email: director_email,
+                    password: director_password,
+                },
+                { where: { companyId: req.params.id } }
+            );
         res.status(200).json({ company });
     } catch (err) {
         console.error("Error fetching Project Applications:", err);
