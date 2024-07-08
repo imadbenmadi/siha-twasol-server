@@ -23,6 +23,9 @@ router.get("/", Admin_midllware, async (req, res) => {
 });
 
 router.get("/:id", Admin_midllware, async (req, res) => {
+    if (!req.params.id || req.params.id < 1 || isNaN(req.params.id)) {
+        return res.status(400).json({ message: "invalide id" });
+    }
     try {
         const company = await Company.findOne({
             where: { id: req.params.id },
@@ -118,6 +121,9 @@ router.post("/", Admin_midllware, async (req, res) => {
 });
 
 router.delete("/:id", Admin_midllware, async (req, res) => {
+    if (!req.params.id || req.params.id < 1 || isNaN(req.params.id)) {
+        return res.status(400).json({ message: "invalide id" });
+    }
     try {
         const company = await Company.findOne({
             where: { id: req.params.id },
@@ -126,6 +132,7 @@ router.delete("/:id", Admin_midllware, async (req, res) => {
             return res.status(404).json({ message: "Company not found" });
         }
         await company.destroy();
+        await Director.destroy({ where: { companyId: req.params.id } });
         res.status(200).json({ message: "Company deleted" });
     } catch (err) {
         console.error("Error fetching Project Applications:", err);
@@ -133,6 +140,9 @@ router.delete("/:id", Admin_midllware, async (req, res) => {
     }
 });
 router.put("/:id", Admin_midllware, async (req, res) => {
+    if (!req.params.id || req.params.id < 1 || isNaN(req.params.id)) {
+        return res.status(400).json({ message: "Missing required fields" });
+    }
     try {
         const company = await Company.findOne({
             where: { id: req.params.id },

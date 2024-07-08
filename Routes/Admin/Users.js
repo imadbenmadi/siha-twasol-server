@@ -46,9 +46,10 @@ router.get("/", adminMiddleware, async (req, res) => {
     }
 });
 router.get("/Medecins/:id", adminMiddleware, async (req, res) => {
+    if (!req.params.id || req.params.id < 1 || isNaN(req.params.id)) {
+        return res.status(400).json({ message: "invalide id" });
+    }
     const MedecinId = req.params.id;
-    if (!MedecinId)
-        return res.status(409).json({ message: "Medecin ID is required" });
     try {
         const Medecin = await Medecin.findOne({
             where: { id: MedecinId },
@@ -65,8 +66,9 @@ router.get("/Medecins/:id", adminMiddleware, async (req, res) => {
 
 router.get("/Malads/:id", adminMiddleware, async (req, res) => {
     const maladId = req.params.id;
-    if (!maladId)
-        return res.status(409).json({ message: "Freelancer ID is required" });
+    if (!req.params.id || req.params.id < 1 || isNaN(req.params.id)) {
+        return res.status(400).json({ message: "invalide id" });
+    }
     try {
         const malad = await Malad.findOne({
             where: { id: maladId },
@@ -82,8 +84,9 @@ router.get("/Malads/:id", adminMiddleware, async (req, res) => {
 
 router.get("/Malads/:id/Feedbacks", adminMiddleware, async (req, res) => {
     const userId = req.params.id;
-    if (!userId)
-        return res.status(409).json({ error: "Unauthorized , missing userId" });
+    if (!req.params.id || req.params.id < 1 || isNaN(req.params.id)) {
+        return res.status(400).json({ message: "invalide id" });
+    }
     try {
         const Feedbacks = await Medicin_Rates.findAll({
             where: {
@@ -105,8 +108,9 @@ router.get("/Malads/:id/Feedbacks", adminMiddleware, async (req, res) => {
 });
 router.get("/Medecins/:id/Feedbacks", adminMiddleware, async (req, res) => {
     const userId = req.params.id;
-    if (!userId)
-        return res.status(409).json({ error: "Unauthorized , missing userId" });
+    if (!req.params.id || req.params.id < 1 || isNaN(req.params.id)) {
+        return res.status(400).json({ message: "invalide id" });
+    }
     try {
         const Feedbacks = await Malad_Rates.findAll({
             where: {
@@ -128,8 +132,9 @@ router.get("/Medecins/:id/Feedbacks", adminMiddleware, async (req, res) => {
 });
 router.delete("/Malads/:id", adminMiddleware, async (req, res) => {
     const maladId = req.params.id;
-    if (!maladId)
-        return res.status(409).json({ message: "Freelancer ID is required" });
+    if (!req.params.id || req.params.id < 1 || isNaN(req.params.id)) {
+        return res.status(400).json({ message: "invalide id" });
+    }
     try {
         const malad = await Malad.findOne({
             where: { id: maladId },
@@ -144,8 +149,9 @@ router.delete("/Malads/:id", adminMiddleware, async (req, res) => {
 });
 router.delete("/Medecins/:id", adminMiddleware, async (req, res) => {
     const MedecinId = req.params.id;
-    if (!MedecinId)
-        return res.status(409).json({ message: "Medecin ID is required" });
+    if (!req.params.id || req.params.id < 1 || isNaN(req.params.id)) {
+        return res.status(400).json({ message: "invalide id" });
+    }
     try {
         const Medecin = await Medecin.findOne({
             where: { id: MedecinId },

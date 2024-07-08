@@ -16,6 +16,9 @@ router.get("/", adminMiddleware, async (req, res) => {
     }
 });
 router.delete("/:id", adminMiddleware, async (req, res) => {
+    if (!req.params.id || req.params.id < 1 || isNaN(req.params.id)) {
+        return res.status(400).json({ message: "invalide id" });
+    }
     const messageId = req.params.id;
     if (!messageId)
         return res.status(409).json({ message: "message id is required" });
