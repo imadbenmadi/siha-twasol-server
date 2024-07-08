@@ -33,7 +33,7 @@ const Medecin = sequelize.define("Medecin", {
     },
     serviceId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     profile_pic_link: {
         type: DataTypes.STRING,
