@@ -44,7 +44,7 @@ app.use("/", express.static(path.join(__dirname, "/public/Work")));
 app.use("/", express.static(path.join(__dirname, "/Public/Portfolio")));
 
 app.get("/", (req, res) => {
-    res.send("Hello from DzidCom");
+    res.send("Hello ");
 });
 app.use("/check_Auth", require("./Routes/Auth/check_Auth"));
 app.use("/Login", require("./Routes/Auth/Login"));

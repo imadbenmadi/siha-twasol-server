@@ -12,7 +12,9 @@ const Admin_midllware = require("../../Middlewares/Admin");
 
 router.get("/", Admin_midllware, async (req, res) => {
     try {
-        const companies = await Company.findAll({});
+        const companies = await Company.findAll({
+            order: [["createdAt", "DESC"]],
+        });
         res.status(200).json({ companies });
     } catch (err) {
         console.error("Error fetching Project Applications:", err);

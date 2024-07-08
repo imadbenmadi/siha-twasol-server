@@ -28,7 +28,7 @@ router.get("/", adminMiddleware, async (req, res) => {
         }));
         const medicinUsers = medicins.map((medicin) => ({
             ...medicin.toJSON(),
-            userType: "medicin",
+            userType: "medecin",
         }));
         const workerUsers = workers.map((worker) => ({
             ...worker.toJSON(),
