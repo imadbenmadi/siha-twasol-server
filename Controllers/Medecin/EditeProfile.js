@@ -1,18 +1,18 @@
-const { Clients } = require("../../../Models/Client");
+const { Medecins } = require("../../Models/Medecin");
 
 const EditeProfile = async (req, res) => {
     const userId = req.decoded.userId;
     const newData = req.body;
 
     try {
-        // Find the Client by their ID
-        const Client = await Clients.findByPk(userId);
+        // Find the Medecin by their ID
+        const Medecin = await Medecins.findByPk(userId);
 
-        if (!Client) {
-            return res.status(404).json({ error: "Client not found." });
+        if (!Medecin) {
+            return res.status(404).json({ error: "Medecin not found." });
         }
 
-        await Client.update(newData);
+        await Medecin.update(newData);
         return res
             .status(200)
             .json({ message: "Profile updated successfully." });

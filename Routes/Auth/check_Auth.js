@@ -140,6 +140,8 @@ router.get("/", async (req, res) => {
                             .json({
                                 message:
                                     "check auth true, Access token refreshed successfully",
+                                userType: result.userType,
+                                userId: result.userId,
                             });
                     } catch (refreshErr) {
                         console.log(

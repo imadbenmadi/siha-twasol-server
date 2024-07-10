@@ -1,13 +1,13 @@
-// const { Clients } = require("../../Models/Client");
-const { Client_Notifications } = require("../../Models/Notifications");
+// const { Medecins } = require("../../Models/Medecin");
+const { Medecin_Notifications } = require("../../Models/Notifications");
 const GetNotifications = async (req, res) => {
     const userId = req.decoded.userId;
     if (!userId)
         return res.status(401).json({ error: "Unauthorized , missing userId" });
     try {
-        const notifications = await Client_Notifications.findAll({
+        const notifications = await Medecin_Notifications.findAll({
             where: {
-                ClientId: userId,
+                MedecinId: userId,
             },
             order: [["createdAt", "DESC"]],
         });
@@ -27,10 +27,10 @@ const DeleteNotification = async (req, res) => {
             .status(409)
             .json({ error: "Unauthorized , missing userId or notificationId" });
     try {
-        const notification = await Client_Notifications.findOne({
+        const notification = await Medecin_Notifications.findOne({
             where: {
                 id: notificationId,
-                ClientId: userId,
+                MedecinId: userId,
             },
         });
         if (!notification)

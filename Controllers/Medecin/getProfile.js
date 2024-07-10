@@ -1,16 +1,9 @@
-const { Freelancers } = require("../../Models/Freelnacer");
-const { PortfolioItems } = require("../../Models/Freelnacer");
-const { Skills } = require("../../Models/Freelnacer");
+const { Medecin } = require("../../Models/Medecin");
 const getProfile = async (req, res) => {
     const userId = req.decoded.userId;
-  
     try {
-        const user_in_db = await Freelancers.findByPk(req.decoded.userId, {
+        const user_in_db = await Medecin.findByPk(userId, {
             attributes: { exclude: ["password"] },
-            include: [
-                { model: PortfolioItems, as: "PortfolioItems" },
-                { model: Skills, as: "Skills" },
-            ],
         });
 
         if (!user_in_db) {
