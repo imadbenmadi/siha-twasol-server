@@ -1,10 +1,8 @@
-const { Malad } = require("../../Models/Malad");
-
+const { Director } = require("../../Models/Director");
 const getProfile = async (req, res) => {
     const userId = req.decoded.userId;
-
     try {
-        const user = await Malad.findByPk(req.decoded.userId, {
+        const user = await Director.findByPk(userId, {
             attributes: { exclude: ["password"] },
         });
 

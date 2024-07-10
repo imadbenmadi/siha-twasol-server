@@ -2,14 +2,14 @@ const { Medecin } = require("../../Models/Medecin");
 const getProfile = async (req, res) => {
     const userId = req.decoded.userId;
     try {
-        const user_in_db = await Medecin.findByPk(userId, {
+        const user = await Medecin.findByPk(userId, {
             attributes: { exclude: ["password"] },
         });
 
-        if (!user_in_db) {
+        if (!user) {
             return res.status(404).json({ error: "user not found." });
         }
-        return res.status(200).json({ User: user_in_db });
+        return res.status(200).json({ User: user });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: error });
