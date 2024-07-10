@@ -34,11 +34,11 @@ const verifyAdmin = async (req, res, next) => {
             return res.status(401).json({
                 message: "unauthorized : Invalid tokens",
             });
-        else if (decoded.userType != "admin") {
+        else if (decoded.userType != "Admin") {
             return res.status(401).json({
                 message: "unauthorized : Invalid tokens ",
             });
-        } else if (decoded.userType == "admin") {
+        } else if (decoded.userType == "Admin") {
             let admin = await Admins.findOne({
                 where: { id: decoded.userId },
             });
@@ -48,10 +48,6 @@ const verifyAdmin = async (req, res, next) => {
                 });
             }
             // req.user = admin;
-        } else if (decoded.userType != "admin") {
-            return res.status(401).json({
-                message: "unauthorized : Invalid tokens ",
-            });
         } else
             return res.status(401).json({
                 message: "unauthorized : Invalid tokens ",
@@ -92,7 +88,7 @@ const verifyAdmin = async (req, res, next) => {
                                 message: "unauthorized : Invalid tokens",
                             });
                         }
-                        if (decoded.userType == "admin") {
+                        if (decoded.userType == "Admin") {
                             let newAccessToken = jwt.sign(
                                 {
                                     userId: decoded.userId,

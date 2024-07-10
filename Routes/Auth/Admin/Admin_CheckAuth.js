@@ -77,7 +77,7 @@ router.get("/", async (req, res) => {
                     }
 
                     const newAccessToken = jwt.sign(
-                        { userId: decoded.userId, userType: "admin" },
+                        { userId: decoded.userId, userType: "Admin" },
                         accessTokenSecret,
                         { expiresIn: "1h" }
                     );

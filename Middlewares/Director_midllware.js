@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { Refresh_tokens } = require("../Models/RefreshTokens");
-const { Admins } = require("../Models/Admin/Admin");
+const { Director } = require("../Models/Director");
 
-const verifyAdmin = async (req, res, next) => {
+const verify_director = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
     if (!accessToken || !refreshToken) {
@@ -28,30 +28,26 @@ const verifyAdmin = async (req, res, next) => {
         let decoded = null;
         decoded = jwt.verify(
             accessToken,
-            process.env.ADMIN_ACCESS_TOKEN_SECRET
+            process.env.Director_ACCESS_TOKEN_SECRET
         );
         if (!decoded.userId || !decoded.userType)
             return res.status(401).json({
                 message: "unauthorized : Invalid tokens",
             });
-        else if (decoded.userType != "admin") {
+        else if (decoded.userType != "Director") {
             return res.status(401).json({
                 message: "unauthorized : Invalid tokens ",
             });
-        } else if (decoded.userType == "admin") {
-            let admin = await Admins.findOne({
+        } else if (decoded.userType == "Director") {
+            let director = await Director.findOne({
                 where: { id: decoded.userId },
             });
-            if (!admin) {
+            if (!director) {
                 return res.status(401).json({
                     message: "unauthorized : Invalid tokens ",
                 });
             }
-            // req.user = admin;
-        } else if (decoded.userType != "admin") {
-            return res.status(401).json({
-                message: "unauthorized : Invalid tokens ",
-            });
+            // req.user = director;
         } else
             return res.status(401).json({
                 message: "unauthorized : Invalid tokens ",
@@ -85,20 +81,20 @@ const verifyAdmin = async (req, res, next) => {
 
                 jwt.verify(
                     refreshToken,
-                    process.env.ADMIN_REFRESH_TOKEN_SECRET,
+                    process.env.Director_REFRESH_TOKEN_SECRET,
                     async (err, decoded) => {
                         if (err || foundInDB.userId !== decoded.userId) {
                             return res.status(401).json({
                                 message: "unauthorized : Invalid tokens",
                             });
                         }
-                        if (decoded.userType == "admin") {
+                        if (decoded.userType == "Director") {
                             let newAccessToken = jwt.sign(
                                 {
                                     userId: decoded.userId,
                                     userType: decoded.userType,
                                 },
-                                process.env.ADMIN_ACCESS_TOKEN_SECRET,
+                                process.env.Director_ACCESS_TOKEN_SECRET,
                                 { expiresIn: "1h" }
                             );
 
@@ -126,4 +122,4 @@ const verifyAdmin = async (req, res, next) => {
     }
 };
 
-module.exports = verifyAdmin;
+module.exports = verify_director;
