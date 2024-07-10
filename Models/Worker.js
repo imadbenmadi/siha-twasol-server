@@ -14,6 +14,18 @@ const Worker = sequelize.define("Worker", {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    serviceId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
 });
 
 Company.hasMany(Worker, { foreignKey: "companyId", as: "Workers" });
