@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Privacy } = require("../Models/Privacy");
-const Admin_Midllware = require("../Middlewares/Admin");
+const Admin_Midllware = require("../Middlewares/Admin_middleware");
 const Handle_Edit_Privacy = async (req, res) => {
     try {
         const { Content } = req.body;

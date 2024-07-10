@@ -7,7 +7,7 @@ const { Worker } = require("../../Models/Worker");
 const { Medecin } = require("../../Models/Medecin");
 const { malad_follow } = require("../../Models/Malad");
 const { Malad } = require("../../Models/Malad");
-const Admin_midllware = require("../../Middlewares/Admin");
+const Admin_midllware = require("../../Middlewares/Admin_middleware");
 
 router.get("/", Admin_midllware, async (req, res) => {
     try {
@@ -98,12 +98,7 @@ router.post("/", Admin_midllware, async (req, res) => {
             where: { email: director_email },
         });
 
-        if (
-            exist_malad ||
-            exist_medicin ||
-            exist_worker ||
-            exist_director
-        ) {
+        if (exist_malad || exist_medicin || exist_worker || exist_director) {
             return res.status(400).json({
                 message: "email already exists , please use another email.",
             });

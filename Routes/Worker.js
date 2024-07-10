@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const Medecin_Middlware = require("../Middlewares/Medecin");
-const MedecinController = require("../Controllers/Medecin_controller");
+const Worker_Middlware = require("../Middlewares/Worker_middleware");
+const WorkerController = require("../Controllers/Worker_controller");
 
-router.get("/:userId/Profile", Medecin_Middlware, MedecinController.getProfile);
+router.get("/:userId/Profile", Worker_Middlware, WorkerController.getProfile);
