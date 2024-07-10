@@ -1,5 +1,5 @@
-const { getProfile } = require("./Director/getProfile");
-const { EditeProfile } = require("./Director/EditeProfile");
+const { getProfile } = require("./Director/Profile");
+const { EditeProfile } = require("./Director/Profile");
 
 const MaladController = {
     getProfile,
