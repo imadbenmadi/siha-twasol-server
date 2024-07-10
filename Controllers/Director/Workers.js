@@ -2,7 +2,6 @@ const { Director } = require("../../Models/Director");
 const { Worker } = require("../../Models/Worker");
 const { Medecin } = require("../../Models/Medecin");
 const { Malad } = require("../../Models/Malad");
-const { Director } = require("../../Models/Director");
 const get_All = async (req, res) => {
     if (!req.params.companyId)
         return res.status(400).json({ error: "companyId is required." });
