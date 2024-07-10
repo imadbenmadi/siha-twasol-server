@@ -2,6 +2,8 @@ const { Director } = require("../../Models/Director");
 const { Worker } = require("../../Models/Worker");
 const { Medecin } = require("../../Models/Medecin");
 const { Malad } = require("../../Models/Malad");
+const { Service } = require("../../Models/Company");
+const { Company } = require("../../Models/Company");
 const get_All = async (req, res) => {
     if (!req.params.companyId)
         return res.status(400).json({ error: "companyId is required." });
@@ -19,7 +21,11 @@ const get_by_id = async (req, res) => {
     if (!req.params.userId)
         return res.status(400).json({ error: "userId is required." });
     try {
-        const user = await Worker.findByPk(req.params.userId);
+        const user = await Worker.findByPk(req.params.userId, {
+            include: [Company, Service],
+            attributes: { exclude: ["password"] },
+        });
+
         if (!user) {
             return res.status(404).json({ error: "user not found." });
         }

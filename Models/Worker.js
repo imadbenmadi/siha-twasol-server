@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/db_connection");
-const { Company } = require("./Company");
+const { Company, Service } = require("./Company");
 const Worker = sequelize.define("Worker", {
     email: {
         type: DataTypes.STRING,
@@ -31,4 +31,6 @@ const Worker = sequelize.define("Worker", {
 Company.hasMany(Worker, { foreignKey: "companyId", as: "Workers" });
 Worker.belongsTo(Company, { foreignKey: "companyId" });
 
+Service.haveMany(Worker, { foreignKey: "serviceId", as: "Workers" });
+Worker.belongsTo(Service, { foreignKey: "serviceId" });
 module.exports = { Worker };
