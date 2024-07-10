@@ -58,10 +58,10 @@ app.use("/Add_Admin", require("./Routes/Auth/Admin/Admin_Add"));
 // app.use("/Admin_Logout", require("./Routes/Auth/Admin/Admin_Logout"));
 app.use("/Admin_CheckAuth", require("./Routes/Auth/Admin/Admin_CheckAuth"));
 
-app.use("/Director", require("./Routes/Director"));
-app.use("/Worker", require("./Routes/Worker"));
-app.use("/Medecin", require("./Routes/Medecin"));
-app.use("/Malad", require("./Routes/Malad"));
+app.use("/Directors", require("./Routes/Director"));
+app.use("/Workers", require("./Routes/Worker"));
+app.use("/Medecins", require("./Routes/Medecin"));
+app.use("/Malads", require("./Routes/Malad"));
 
 const { Event } = require("./Models/Event");
 const { Adv } = require("./Models/Adv");
