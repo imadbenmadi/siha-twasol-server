@@ -1,9 +1,9 @@
-const { getProfile } = require("./Director/Profile");
-const { EditeProfile } = require("./Director/Profile");
+const profile_controller = require("./Director/Profile");
+const worker_controller = require("./Director/Workers");
 
-const MaladController = {
-    getProfile,
-    EditeProfile,
+const DirectorController = {
+    profile_controller,
+    worker_controller,
 };
 
-module.exports = MaladController;
+module.exports = DirectorController;
