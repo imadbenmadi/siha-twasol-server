@@ -112,7 +112,7 @@ const add_worker = async (req, res) => {
     }
 };
 const get_Services = async (req, res) => {
-    const { companyId } = req.body;
+    const { companyId } = req.params;
     if (!companyId)
         return res.status(400).json({ error: "companyId is required." });
     try {
