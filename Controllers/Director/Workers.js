@@ -73,8 +73,9 @@ const delet_worker = async (req, res) => {
     }
 };
 const add_worker = async (req, res) => {
-    const { email, password, companyId } = req.body;
-    if (!email || !password || !companyId)
+    const { email, password, firstName, lastName, serviceId, companyId } =
+        req.body;
+    if (!email || !password || !companyId || !firstName || !lastName)
         return res
             .status(400)
             .json({ error: "email, password, and companyId are required." });
@@ -96,7 +97,14 @@ const add_worker = async (req, res) => {
                 message: "email already exists , please use another email.",
             });
         }
-        const user = await Worker.create({ email, password, companyId });
+        const user = await Worker.create({
+            email,
+            password,
+            companyId,
+            firstName,
+            lastName,
+            serviceId,
+        });
         return res.status(200).json({ User: user });
     } catch (error) {
         console.log(error);
