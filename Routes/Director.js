@@ -30,5 +30,10 @@ router.delete(
     Director_Middlware,
     DirectorController.worker_controller.delet_worker
 );
+router.get(
+    "/:userId/:companyId/Workers/:workerId/Services",
+    Director_Middlware,
+    DirectorController.worker_controller.get_Services
+);
 
 module.exports = router;

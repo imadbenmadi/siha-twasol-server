@@ -111,4 +111,23 @@ const add_worker = async (req, res) => {
         return res.status(500).json({ error: error });
     }
 };
-module.exports = { get_All, get_by_id, edit_worker, delet_worker, add_worker };
+const get_Services = async (req, res) => {
+    const { companyId } = req.body;
+    if (!companyId)
+        return res.status(400).json({ error: "companyId is required." });
+    try {
+        const services = await Service.findAll({ where: { companyId } });
+        return res.status(200).json({ Services: services });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: error });
+    }
+};
+module.exports = {
+    get_All,
+    get_by_id,
+    edit_worker,
+    delet_worker,
+    add_worker,
+    get_Services,
+};
