@@ -31,7 +31,7 @@ router.delete(
     DirectorController.worker_controller.delet_worker
 );
 router.get(
-    "/:userId/:companyId/Workers/:workerId/Services",
+    "/:userId/:companyId/Services",
     Director_Middlware,
     DirectorController.worker_controller.get_Services
 );
