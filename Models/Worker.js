@@ -31,6 +31,6 @@ const Worker = sequelize.define("Worker", {
 Company.hasMany(Worker, { foreignKey: "companyId", as: "Workers" });
 Worker.belongsTo(Company, { foreignKey: "companyId" });
 
-Service.haveMany(Worker, { foreignKey: "serviceId", as: "Workers" });
+Service.hasMany(Worker, { foreignKey: "serviceId", as: "Workers" });
 Worker.belongsTo(Service, { foreignKey: "serviceId" });
 module.exports = { Worker };
