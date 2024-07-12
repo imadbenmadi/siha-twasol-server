@@ -6,12 +6,9 @@ const path = require("path");
 const allowedOrigins = [
     "http://localhost:5173",
     "http://localhost:5174",
-    // "http://localhost:3500",
-    "https://dzidcom-front.vercel.app",
-    "https://dashboard.dzidcom.skate.dz",
-    "https://dashboard.dzidcom.skate.dz/",
-    "https://dzidcom.skate.dz",
-    "https://dzidcom.skate.dz/",
+    "https://scs-tawassolsihi.com/",
+    "https://scs-tawassolsihi.com",
+    "https://www.scs-tawassolsihi.com/",
 ];
 const corsOptions = {
     origin: (origin, callback) => {
