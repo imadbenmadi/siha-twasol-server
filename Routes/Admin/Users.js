@@ -99,11 +99,11 @@ router.get("/Malads/:id/Feedbacks", adminMiddleware, async (req, res) => {
             order: [["createdAt", "DESC"]],
         });
         if (!Feedbacks)
-            return res.status(404).json({ error: "No Feedbacks found." });
+            return res.status(404).json({ message: "No Feedbacks found." });
         return res.status(200).json({ Feedbacks: Feedbacks });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ message: "Internal server error." });
     }
 });
 router.get("/Medecins/:id/Feedbacks", adminMiddleware, async (req, res) => {
@@ -123,11 +123,11 @@ router.get("/Medecins/:id/Feedbacks", adminMiddleware, async (req, res) => {
             order: [["createdAt", "DESC"]],
         });
         if (!Feedbacks)
-            return res.status(404).json({ error: "No Feedbacks found." });
+            return res.status(404).json({ message: "No Feedbacks found." });
         return res.status(200).json({ Feedbacks: Feedbacks });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ message: "Internal server error." });
     }
 });
 router.delete("/Malads/:id", adminMiddleware, async (req, res) => {

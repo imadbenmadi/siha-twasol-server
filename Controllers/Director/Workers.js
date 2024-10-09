@@ -6,7 +6,7 @@ const { Service } = require("../../Models/Company");
 const { Company } = require("../../Models/Company");
 const get_All = async (req, res) => {
     if (!req.params.companyId)
-        return res.status(400).json({ error: "companyId is required." });
+        return res.status(400).json({ message: "companyId is required." });
     try {
         const users = await Worker.findAll({
             where: { companyId: req.params.companyId },
@@ -14,12 +14,12 @@ const get_All = async (req, res) => {
         return res.status(200).json({ Users: users });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const get_by_id = async (req, res) => {
     if (!req.params.userId)
-        return res.status(400).json({ error: "userId is required." });
+        return res.status(400).json({ message: "userId is required." });
     try {
         const user = await Worker.findByPk(req.params.userId, {
             include: [{ model: Company }, { model: Service }],
@@ -27,12 +27,12 @@ const get_by_id = async (req, res) => {
         });
 
         if (!user) {
-            return res.status(404).json({ error: "user not found." });
+            return res.status(404).json({ message: "user not found." });
         }
         return res.status(200).json({ User: user });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const edit_worker = async (req, res) => {
@@ -40,14 +40,15 @@ const edit_worker = async (req, res) => {
     const newData = req.body;
     const email = newData.email;
     const password = newData.password;
-    if (!userId) return res.status(400).json({ error: "userId is required." });
+    if (!userId)
+        return res.status(400).json({ message: "userId is required." });
 
     try {
         // Find the user by their ID
         const user = await Worker.findByPk(userId);
 
         if (!user) {
-            return res.status(404).json({ error: "user not found." });
+            return res.status(404).json({ message: "user not found." });
         }
 
         await user.update({ email, password });
@@ -56,31 +57,37 @@ const edit_worker = async (req, res) => {
             .json({ message: "Profile updated successfully." });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ message: error });
     }
 };
 const delet_worker = async (req, res) => {
     const userId = req.params.userId;
-    if (!userId) return res.status(400).json({ error: "userId is required." });
+    if (!userId)
+        return res.status(400).json({ message: "userId is required." });
     try {
         const user = await Worker.findByPk(userId);
         if (!user) {
-            return res.status(404).json({ error: "user not found." });
+            return res.status(404).json({ message: "user not found." });
         }
         await user.destroy();
         return res.status(200).json({ message: "User deleted successfully." });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const add_worker = async (req, res) => {
     const { email, password, firstName, lastName, serviceId, companyId } =
         req.body;
-    if (!email || !password || !companyId || !firstName || !lastName)
-        return res
-            .status(400)
-            .json({ error: "email, password, and companyId are required." });
+    if (
+        !email ||
+        !password ||
+        !companyId ||
+        !serviceId ||
+        !firstName ||
+        !lastName
+    )
+        return res.status(400).json({ message: "messing data" });
     try {
         const exist_medicin = await Medecin.findOne({
             where: { email: email },
@@ -110,19 +117,19 @@ const add_worker = async (req, res) => {
         return res.status(200).json({ User: user });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const get_Services = async (req, res) => {
     const { companyId } = req.params;
     if (!companyId)
-        return res.status(400).json({ error: "companyId is required." });
+        return res.status(400).json({ message: "companyId is required." });
     try {
         const services = await Service.findAll({ where: { companyId } });
         return res.status(200).json({ Services: services });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 module.exports = {

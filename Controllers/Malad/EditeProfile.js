@@ -7,7 +7,7 @@ const EditeProfile = async (req, res) => {
     try {
         const user = await Malad.findByPk(userId);
         if (!user) {
-            return res.status(404).json({ error: "user not found." });
+            return res.status(404).json({ message: "user not found." });
         }
         await user.update(newData);
 
@@ -17,7 +17,7 @@ const EditeProfile = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ message: "Internal server error." });
     }
 };
 

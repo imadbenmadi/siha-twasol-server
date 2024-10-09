@@ -6,19 +6,19 @@ const { Company } = require("../../Models/Company");
 
 const get_All = async (req, res) => {
     if (!req.params.companyId)
-        return res.status(400).json({ error: "companyId is required." });
+        return res.status(400).json({ message: "companyId is required." });
     try {
         const services = await Service.findAll({});
         return res.status(200).json({ services: services });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const get_compayny_Services = async (req, res) => {
     const { companyId } = req.params;
     if (!companyId)
-        return res.status(400).json({ error: "companyId is required." });
+        return res.status(400).json({ message: "companyId is required." });
     try {
         const services = await Service.findAll({
             where: { companyId: req.params.companyId },
@@ -26,12 +26,12 @@ const get_compayny_Services = async (req, res) => {
         return res.status(200).json({ Services: services });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const get_by_id = async (req, res) => {
     if (!req.params.serviceId)
-        return res.status(400).json({ error: "serviceId is required." });
+        return res.status(400).json({ message: "serviceId is required." });
     try {
         const service = await Service.findOne(
             { where: { id: req.params.serviceId } },
@@ -41,18 +41,18 @@ const get_by_id = async (req, res) => {
         );
 
         if (!service) {
-            return res.status(404).json({ error: "service not found." });
+            return res.status(404).json({ message: "service not found." });
         }
         return res.status(200).json({ Service: service });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const edit_service = async (req, res) => {
     const serviceId = req.params.serviceId;
     if (!serviceId)
-        return res.status(400).json({ error: "serviceId is required." });
+        return res.status(400).json({ message: "serviceId is required." });
     const newData = req.body;
     const Name = newData.Name;
 
@@ -63,7 +63,7 @@ const edit_service = async (req, res) => {
         });
 
         if (!service) {
-            return res.status(404).json({ error: "service not found." });
+            return res.status(404).json({ message: "service not found." });
         }
 
         await service.update({ Name });
@@ -72,19 +72,19 @@ const edit_service = async (req, res) => {
             .json({ message: "Profile updated successfully." });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ message: "Internal server error." });
     }
 };
 const delet_service = async (req, res) => {
     const serviceId = req.params.serviceId;
     if (!serviceId)
-        return res.status(400).json({ error: "serviceId is required." });
+        return res.status(400).json({ message: "serviceId is required." });
     try {
         const service = await Service.findOne({
             where: { id: req.params.serviceId },
         });
         if (!service) {
-            return res.status(404).json({ error: "service not found." });
+            return res.status(404).json({ message: "service not found." });
         }
         await service.destroy();
         return res
@@ -92,13 +92,13 @@ const delet_service = async (req, res) => {
             .json({ message: "Service deleted successfully." });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const add_service = async (req, res) => {
     const { Name, companyId } = req.body;
     if (!Name || !companyId)
-        return res.status(400).json({ error: "Messing Data." });
+        return res.status(400).json({ message: "Messing Data." });
     try {
         const service = await Service.create({
             Name,
@@ -107,7 +107,7 @@ const add_service = async (req, res) => {
         return res.status(200).json({ Service: service });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 
