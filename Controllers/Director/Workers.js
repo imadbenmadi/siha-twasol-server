@@ -19,12 +19,12 @@ const get_All = async (req, res) => {
     }
 };
 const get_by_id = async (req, res) => {
-    if (!req.params.userId)
+    if (!req.params.workerId)
         return res.status(400).json({ message: "userId is required." });
     try {
-        const user = await Worker.findByPk(req.params.userId, {
+        const user = await Worker.findByPk(req.params.workerId, {
             include: [{ model: Company }, { model: Service }],
-            attributes: { exclude: ["password"] },
+            // attributes: { exclude: ["password"] },
         });
 
         if (!user) {
@@ -37,7 +37,7 @@ const get_by_id = async (req, res) => {
     }
 };
 const edit_worker = async (req, res) => {
-    const userId = req.params.userId;
+    const userId = req.params.workerId;
     const newData = req.body;
     const email = newData.email;
     const password = newData.password;
@@ -51,6 +51,23 @@ const edit_worker = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "user not found." });
         }
+        const exist_medicin = await Medecin.findOne({
+            where: { email: email },
+        });
+        const exist_worker = await Worker.findOne({
+            where: { email: email },
+        });
+        const exist_malad = await Malad.findOne({
+            where: { email: email },
+        });
+        const exist_director = await Director.findOne({
+            where: { email: email },
+        });
+        if (exist_malad || exist_medicin || exist_director || exist_worker) {
+            return res.status(400).json({
+                message: "email already exists , please use another email.",
+            });
+        }
 
         await user.update({ email, password });
         return res
@@ -62,7 +79,7 @@ const edit_worker = async (req, res) => {
     }
 };
 const delet_worker = async (req, res) => {
-    const userId = req.params.userId;
+    const userId = req.params.workerId;
     if (!userId)
         return res.status(400).json({ message: "userId is required." });
     try {
