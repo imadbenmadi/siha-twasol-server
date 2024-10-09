@@ -35,5 +35,36 @@ router.get(
     Director_Middlware,
     DirectorController.worker_controller.get_Services
 );
+// _____________________________
+router.get(
+    "/:userId/:companyId/Services",
+    Director_Middlware,
+    DirectorController.Services_controller.get_All
+);
+router.get(
+    "/:userId/:companyId/Services/:serviceId",
+    Director_Middlware,
+    DirectorController.Services_controller.get_by_id
+);
+router.get(
+    "/:userId/:companyId/Services",
+    Director_Middlware,
+    DirectorController.Services_controller.get_compayny_Services
+);
+router.put(
+    "/:userId/:companyId/Services/:serviceId",
+    Director_Middlware,
+    DirectorController.Services_controller.edit_service
+);
+router.delete(
+    "/:userId/:companyId/Services/:serviceId",
+    Director_Middlware,
+    DirectorController.Services_controller.delet_service
+);
+router.post(
+    "/:userId/:companyId/Services",
+    Director_Middlware,
+    DirectorController.Services_controller.add_service
+);
 
 module.exports = router;

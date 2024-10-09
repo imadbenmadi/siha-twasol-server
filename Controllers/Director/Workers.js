@@ -22,7 +22,7 @@ const get_by_id = async (req, res) => {
         return res.status(400).json({ error: "userId is required." });
     try {
         const user = await Worker.findByPk(req.params.userId, {
-            include: [Company, Service],
+            include: [{ model: Company }, { model: Service }],
             attributes: { exclude: ["password"] },
         });
 
@@ -40,6 +40,7 @@ const edit_worker = async (req, res) => {
     const newData = req.body;
     const email = newData.email;
     const password = newData.password;
+    if (!userId) return res.status(400).json({ error: "userId is required." });
 
     try {
         // Find the user by their ID
@@ -60,6 +61,7 @@ const edit_worker = async (req, res) => {
 };
 const delet_worker = async (req, res) => {
     const userId = req.params.userId;
+    if (!userId) return res.status(400).json({ error: "userId is required." });
     try {
         const user = await Worker.findByPk(userId);
         if (!user) {
