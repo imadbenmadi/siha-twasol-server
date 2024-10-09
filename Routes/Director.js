@@ -9,7 +9,7 @@ router.get(
     Director_Middlware,
     DirectorController.profile_controller.getProfile
 );
-
+// _____________________________
 router.get(
     "/:userId/:companyId/Workers",
     Director_Middlware,
@@ -34,6 +34,11 @@ router.get(
     "/:userId/:companyId/Services",
     Director_Middlware,
     DirectorController.worker_controller.get_Services
+);
+router.post(
+    "/:userId/:companyId/Workers",
+    Director_Middlware,
+    DirectorController.worker_controller.add_worker
 );
 // _____________________________
 router.get(
