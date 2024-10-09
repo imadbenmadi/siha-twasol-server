@@ -9,6 +9,7 @@ const get_All = async (req, res) => {
         return res.status(400).json({ message: "companyId is required." });
     try {
         const users = await Worker.findAll({
+            include: [{ model: Company }, { model: Service }],
             where: { companyId: req.params.companyId },
         });
         return res.status(200).json({ Users: users });
@@ -79,6 +80,13 @@ const delet_worker = async (req, res) => {
 const add_worker = async (req, res) => {
     const { email, password, firstName, lastName, serviceId, companyId } =
         req.body;
+    // console.log("email", email);
+    // console.log("password", password);
+    // console.log("firstName", firstName);
+    // console.log("lastName", lastName);
+    // console.log("serviceId", serviceId);
+    // console.log("companyId", companyId);
+
     if (
         !email ||
         !password ||

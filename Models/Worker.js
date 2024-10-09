@@ -32,5 +32,5 @@ Company.hasMany(Worker, { foreignKey: "companyId", as: "Workers" });
 Worker.belongsTo(Company, { foreignKey: "companyId" });
 
 Service.hasMany(Worker, { foreignKey: "serviceId", as: "Workers" });
-// Worker.belongsTo(Service, { foreignKey: "serviceId" });
+Worker.belongsTo(Service, { foreignKey: "serviceId" });
 module.exports = { Worker };
