@@ -51,22 +51,29 @@ const edit_doctore = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "user not found." });
         }
-        const exist_medicin = await Medecin.findOne({
-            where: { email: email },
-        });
-        const exist_worker = await Worker.findOne({
-            where: { email: email },
-        });
-        const exist_malad = await Malad.findOne({
-            where: { email: email },
-        });
-        const exist_director = await Director.findOne({
-            where: { email: email },
-        });
-        if (exist_malad || exist_medicin || exist_director || exist_worker) {
-            return res.status(400).json({
-                message: "email already exists , please use another email.",
+        if (user.email != email) {
+            const exist_medicin = await Medecin.findOne({
+                where: { email: email },
             });
+            const exist_worker = await Worker.findOne({
+                where: { email: email },
+            });
+            const exist_malad = await Malad.findOne({
+                where: { email: email },
+            });
+            const exist_director = await Director.findOne({
+                where: { email: email },
+            });
+            if (
+                exist_malad ||
+                exist_medicin ||
+                exist_director ||
+                exist_worker
+            ) {
+                return res.status(400).json({
+                    message: "email already exists , please use another email.",
+                });
+            }
         }
 
         await user.update({ email, password });
