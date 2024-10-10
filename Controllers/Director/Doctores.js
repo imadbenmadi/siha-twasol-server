@@ -104,7 +104,6 @@ const add_doctore = async (req, res) => {
         speciality,
         serviceId,
         companyId,
-        profile_pic_link, // Optional
     } = req.body;
 
     // Validate the required fields
@@ -162,7 +161,6 @@ const add_doctore = async (req, res) => {
             speciality,
             serviceId,
             companyId,
-            profile_pic_link, // Optional
         });
 
         // Return success response with created user
