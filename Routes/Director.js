@@ -71,5 +71,32 @@ router.post(
     Director_Middlware,
     DirectorController.Services_controller.add_service
 );
+// _____________________________
+router.get(
+    "/:userId/:companyId/Doctores",
+    Director_Middlware,
+    DirectorController.Doctores_controller.get_All
+);
+router.get(
+    "/:userId/:companyId/Doctores/:doctoreId",
+    Director_Middlware,
+    DirectorController.Doctores_controller.get_by_id
+);
+router.put(
+    "/:userId/:companyId/Doctores/:doctoreId",
+    Director_Middlware,
+    DirectorController.Doctores_controller.edit_doctore
+);
+router.delete(
+    "/:userId/:companyId/Doctores/:doctoreId",
+    Director_Middlware,
+    DirectorController.Doctores_controller.delet_doctore
+);
+
+router.post(
+    "/:userId/:companyId/Doctores",
+    Director_Middlware,
+    DirectorController.Doctores_controller.add_doctore
+);
 
 module.exports = router;
