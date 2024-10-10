@@ -95,56 +95,86 @@ const delet_doctore = async (req, res) => {
     }
 };
 const add_doctore = async (req, res) => {
-    const { email, password, firstName, lastName, serviceId, companyId } =
-        req.body;
-    // console.log("email", email);
-    // console.log("password", password);
-    // console.log("firstName", firstName);
-    // console.log("lastName", lastName);
-    // console.log("serviceId", serviceId);
-    // console.log("companyId", companyId);
+    const {
+        email,
+        password,
+        firstName,
+        lastName,
+        telephone,
+        speciality,
+        serviceId,
+        companyId,
+        profile_pic_link, // Optional
+    } = req.body;
 
+    // Validate the required fields
     if (
         !email ||
         !password ||
         !companyId ||
         !serviceId ||
         !firstName ||
-        !lastName
-    )
-        return res.status(400).json({ message: "messing data" });
+        !lastName ||
+        !speciality
+    ) {
+        return res.status(400).json({ message: "Missing required fields." });
+    }
+
+    // Validate email format (basic email regex)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: "Invalid email format." });
+    }
+
+    // Validate password length
+    if (password.length < 8) {
+        return res.status(400).json({
+            message: "Password should be at least 8 characters long.",
+        });
+    }
+
+    // Validate that serviceId and companyId are integers
+    if (isNaN(serviceId) || isNaN(companyId)) {
+        return res.status(400).json({
+            message: "serviceId and companyId should be valid numbers.",
+        });
+    }
+
     try {
-        const exist_medicin = await Medecin.findOne({
-            where: { email: email },
-        });
-        const exist_doctore = await Medecin.findOne({
-            where: { email: email },
-        });
-        const exist_malad = await Malad.findOne({
-            where: { email: email },
-        });
-        const exist_director = await Director.findOne({
-            where: { email: email },
-        });
-        if (exist_malad || exist_medicin || exist_director || exist_doctore) {
+        // Check if the email already exists in Medecin, Malad, or Director
+        const exist_medicin = await Medecin.findOne({ where: { email } });
+        const exist_malad = await Malad.findOne({ where: { email } });
+        const exist_director = await Director.findOne({ where: { email } });
+
+        if (exist_medicin || exist_malad || exist_director) {
             return res.status(400).json({
-                message: "email already exists , please use another email.",
+                message: "Email already exists, please use another email.",
             });
         }
+
+        // Create new Medecin (Doctor)
         const user = await Medecin.create({
             email,
             password,
-            companyId,
             firstName,
             lastName,
+            telephone, // Optional
+            speciality,
             serviceId,
+            companyId,
+            profile_pic_link, // Optional
         });
+
+        // Return success response with created user
         return res.status(200).json({ User: user });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({ message: error });
+        console.error(error);
+        return res
+            .status(500)
+            .json({ message: "Server error: " + error.message });
     }
 };
+
 const get_Services = async (req, res) => {
     const { companyId } = req.params;
     if (!companyId)
