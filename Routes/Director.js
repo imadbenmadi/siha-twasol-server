@@ -78,17 +78,17 @@ router.get(
     DirectorController.Doctores_controller.get_All
 );
 router.get(
-    "/:userId/:companyId/Doctores/:doctoreId",
+    "/:userId/:companyId/Doctores/:doctorId",
     Director_Middlware,
     DirectorController.Doctores_controller.get_by_id
 );
 router.put(
-    "/:userId/:companyId/Doctores/:doctoreId",
+    "/:userId/:companyId/Doctores/:doctorId",
     Director_Middlware,
     DirectorController.Doctores_controller.edit_doctore
 );
 router.delete(
-    "/:userId/:companyId/Doctores/:doctoreId",
+    "/:userId/:companyId/Doctores/:doctorId",
     Director_Middlware,
     DirectorController.Doctores_controller.delet_doctore
 );
