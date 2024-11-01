@@ -34,14 +34,12 @@ app.use(credentials);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+const { initializeDirectories } = require("./helpers/Directory.helper");
+initializeDirectories();
 app.use("/", express.static(path.join(__dirname, "/public")));
-app.use("/", express.static(path.join(__dirname, "/public/ProfilePics")));
-app.use("/", express.static(path.join(__dirname, "/public/Work")));
-app.use("/", express.static(path.join(__dirname, "/Public/Portfolio")));
 
 app.get("/", (req, res) => {
-    res.send("Hello ");
+    res.send("Hello from SCSTawassolSihi");
 });
 app.use("/check_Auth", require("./Routes/Auth/check_Auth"));
 app.use("/Login", require("./Routes/Auth/Login"));

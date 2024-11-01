@@ -1,121 +1,131 @@
-const { Director } = require("../../Models/Director");
-const { Service } = require("../../Models/Company");
-const { Medecin } = require("../../Models/Medecin");
-const { Malad } = require("../../Models/Malad");
+const { Blog } = require("../../Models/Blog");
 const { Company } = require("../../Models/Company");
 
+// Get all blogs
 const get_All = async (req, res) => {
-    if (!req.params.companyId)
-        return res.status(400).json({ message: "companyId is required." });
     try {
-        const services = await Service.findAll({});
-        return res.status(200).json({ services: services });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({ message: error });
-    }
-};
-const get_compayny_Services = async (req, res) => {
-    const { companyId } = req.params;
-    if (!companyId)
-        return res.status(400).json({ message: "companyId is required." });
-    try {
-        const services = await Service.findAll({
-            where: { companyId: req.params.companyId },
+        const blogs = await Blog.findAll({
+            include: [{ model: Company }],
         });
-        return res.status(200).json({ Services: services });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({ message: error });
-    }
-};
-const get_by_id = async (req, res) => {
-    if (!req.params.serviceId)
-        return res.status(400).json({ message: "serviceId is required." });
-    try {
-        const service = await Service.findOne(
-            { where: { id: req.params.serviceId } },
-            {
-                include: [{ model: Company }],
-            }
-        );
-
-        if (!service) {
-            return res.status(404).json({ message: "service not found." });
-        }
-        return res.status(200).json({ Service: service });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({ message: error });
-    }
-};
-const edit_service = async (req, res) => {
-    const serviceId = req.params.serviceId;
-    if (!serviceId)
-        return res.status(400).json({ message: "serviceId is required." });
-    const newData = req.body;
-    const Name = newData.Name;
-
-    try {
-        // Find the service by their ID
-        const service = await Service.findOne({
-            where: { id: req.params.serviceId },
-        });
-
-        if (!service) {
-            return res.status(404).json({ message: "service not found." });
-        }
-
-        await service.update({ Name });
-        return res
-            .status(200)
-            .json({ message: "Profile updated successfully." });
+        return res.status(200).json({ blogs });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Internal server error." });
     }
 };
-const delet_service = async (req, res) => {
-    const serviceId = req.params.serviceId;
-    if (!serviceId)
-        return res.status(400).json({ message: "serviceId is required." });
+
+// Get blogs by companyId
+const get_company_Services = async (req, res) => {
+    const { companyId } = req.params;
+    if (!companyId) {
+        return res.status(400).json({ message: "companyId is required." });
+    }
+
     try {
-        const service = await Service.findOne({
-            where: { id: req.params.serviceId },
+        const blogs = await Blog.findAll({
+            where: { companyId },
+            include: [{ model: Company }],
         });
-        if (!service) {
-            return res.status(404).json({ message: "service not found." });
-        }
-        await service.destroy();
-        return res
-            .status(200)
-            .json({ message: "Service deleted successfully." });
+        return res.status(200).json({ blogs });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({ message: error });
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error." });
     }
 };
-const add_service = async (req, res) => {
-    const { Name, companyId } = req.body;
-    if (!Name || !companyId)
-        return res.status(400).json({ message: "Messing Data." });
+
+// Get a blog by ID
+const get_by_id = async (req, res) => {
+    const { blogId } = req.params;
+    if (!blogId) {
+        return res.status(400).json({ message: "blogId is required." });
+    }
+
     try {
-        const service = await Service.create({
-            Name,
+        const blog = await Blog.findOne({
+            where: { id: blogId },
+            include: [{ model: Company }],
+        });
+        if (!blog) {
+            return res.status(404).json({ message: "Blog not found." });
+        }
+        return res.status(200).json({ blog });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error." });
+    }
+};
+
+// Edit blog details
+const edit_blog = async (req, res) => {
+    const { blogId } = req.params;
+    if (!blogId) {
+        return res.status(400).json({ message: "blogId is required." });
+    }
+
+    const { Title, Description } = req.body;
+
+    try {
+        const blog = await Blog.findOne({ where: { id: blogId } });
+        if (!blog) {
+            return res.status(404).json({ message: "Blog not found." });
+        }
+
+        await blog.update({ Title, Description });
+        return res.status(200).json({ message: "Blog updated successfully." });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error." });
+    }
+};
+
+// Delete a blog
+const delete_blog = async (req, res) => {
+    const { blogId } = req.params;
+    if (!blogId) {
+        return res.status(400).json({ message: "blogId is required." });
+    }
+
+    try {
+        const blog = await Blog.findOne({ where: { id: blogId } });
+        if (!blog) {
+            return res.status(404).json({ message: "Blog not found." });
+        }
+
+        await blog.destroy();
+        return res.status(200).json({ message: "Blog deleted successfully." });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error." });
+    }
+};
+
+// Add a new blog
+const add_blog = async (req, res) => {
+    const { Title, Description, ownerId, ownerType, companyId } = req.body;
+    if (!Title || !ownerId || !ownerType || !companyId) {
+        return res.status(400).json({ message: "Missing required fields." });
+    }
+
+    try {
+        const blog = await Blog.create({
+            Title,
+            Description,
+            ownerId,
+            ownerType,
             companyId,
         });
-        return res.status(200).json({ Service: service });
+        return res.status(201).json({ blog });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({ message: error });
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error." });
     }
 };
 
 module.exports = {
     get_All,
+    get_company_Services,
     get_by_id,
-    edit_service,
-    delet_service,
-    add_service,
-    get_compayny_Services,
+    edit_blog,
+    delete_blog,
+    add_blog,
 };
