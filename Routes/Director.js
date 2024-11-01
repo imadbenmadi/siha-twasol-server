@@ -112,18 +112,18 @@ router.get(
 router.put(
     "/:userId/:companyId/Blogs/:doctorId",
     Director_Middlware,
-    DirectorController.Blogs_controller.edit_doctore
+    DirectorController.Blogs_controller.edit_blog
 );
 router.delete(
     "/:userId/:companyId/Blogs/:doctorId",
     Director_Middlware,
-    DirectorController.Blogs_controller.delet_doctore
+    DirectorController.Blogs_controller.delete_blog
 );
 
 router.post(
     "/:userId/:companyId/Blogs",
     Director_Middlware,
-    DirectorController.Blogs_controller.add_doctore
+    DirectorController.Blogs_controller.add_blog
 );
 // _____________________________
 router.get(
@@ -139,18 +139,18 @@ router.get(
 router.put(
     "/:userId/:companyId/Events/:doctorId",
     Director_Middlware,
-    DirectorController.Events_controller.edit_doctore
+    DirectorController.Events_controller.edit_event
 );
 router.delete(
     "/:userId/:companyId/Events/:doctorId",
     Director_Middlware,
-    DirectorController.Events_controller.delet_doctore
+    DirectorController.Events_controller.delete_event
 );
 
 router.post(
     "/:userId/:companyId/Events",
     Director_Middlware,
-    DirectorController.Events_controller.add_doctore
+    DirectorController.Events_controller.add_event
 );
 
 module.exports = router;
