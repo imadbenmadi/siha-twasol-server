@@ -1,8 +1,15 @@
 const { Worker } = require("../../Models/Worker");
-
+const { Company } = require("../../Models/Company");
 const getProfile = async (req, res) => {
     try {
         const user = await Worker.findByPk(req.decoded.userId, {
+            include: [
+                {
+                    model: Company,
+                    as: "Company",
+                    attributes: { exclude: ["password"] },
+                },
+            ],
             attributes: { exclude: ["password"] },
         });
 
