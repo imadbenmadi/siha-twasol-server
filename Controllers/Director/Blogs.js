@@ -59,20 +59,75 @@ const get_by_id = async (req, res) => {
 // Edit blog details
 const edit_blog = async (req, res) => {
     const { blogId } = req.params;
+    const { Title, Description } = req.body;
+    const { image } = req.files || {}; // Destructure and handle when image is not provided
     const updates = {};
-    if (req.body.Title) updates.Title = req.body.Title;
-    if (req.body.Description) updates.Description = req.body.Description;
+
+    if (Title) updates.Title = Title;
+    if (Description) updates.Description = Description;
 
     try {
+        // Fetch the blog record by ID
         const blog = await Blog.findByPk(blogId);
         if (!blog) {
             return res.status(404).json({ message: "Blog not found." });
         }
 
+        // Handle image replacement if a new image file is provided
+        if (image) {
+            console.log("Uploaded image MIME type:", image.mimetype);
+
+            // Check MIME type or file extension as a fallback
+            const allowedMimeTypes = [
+                "image/jpeg",
+                "image/png",
+                "image/jpg",
+                "image/heic",
+            ];
+            const fileExtension = path.extname(image.name).toLowerCase();
+
+            if (
+                !allowedMimeTypes.includes(image.mimetype) &&
+                ![".jpeg", ".jpg", ".png", ".heic"].includes(fileExtension)
+            ) {
+                return res
+                    .status(400)
+                    .json({
+                        message: "Only JPEG, PNG, and HEIC images are allowed!",
+                    });
+            }
+
+            // Delete the old image if it exists
+            if (blog.image_link) {
+                const previousFilename = path.basename(blog.image_link);
+                const previousImagePath = path.join(
+                    "public/Blog_Pics",
+                    previousFilename
+                );
+                try {
+                    if (fs.existsSync(previousImagePath)) {
+                        fs.unlinkSync(previousImagePath);
+                    }
+                } catch (error) {
+                    console.error("Error deleting previous image:", error);
+                }
+            }
+
+            // Create a unique filename and copy file to target location
+            const uniqueFilename = `Blog_Pic-${blogId}-${Date.now()}${fileExtension}`;
+            const targetPath = path.join("public/Blog_Pics", uniqueFilename);
+            fs.copyFileSync(image.path, targetPath);
+            fs.unlinkSync(image.path);
+
+            // Update the blog's image_link field with the new path
+            updates.image_link = `/Blog_Pics/${uniqueFilename}`;
+        }
+
+        // Apply updates to the blog record
         await blog.update(updates);
         return res.status(200).json({ message: "Blog updated successfully." });
     } catch (error) {
-        console.error(error);
+        console.error("Error updating blog:", error);
         return res
             .status(500)
             .json({ message: "Failed to update blog due to server error." });
@@ -130,7 +185,28 @@ const add_blog = async (req, res) => {
     if (!Title || !ownerId || !ownerType || !companyId) {
         return res.status(400).json({ message: "Missing required fields." });
     }
+    let uniqueSuffix = null;
+    const { image } = req.files;
+    if (image) {
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/jpg",
+            "image/heic",
+        ];
+        if (!allowedTypes.includes(image.type)) {
+            throw new Error("Only JPEG and PNG and JPG images are allowed!");
+        }
 
+        const fileExtension = path.extname(image.name).toLocaleLowerCase();
+        if (![".jpeg", ".jpg", ".png", ".heic"].includes(fileExtension)) {
+            throw new Error("Invalid file extension");
+        }
+        uniqueSuffix = `Blog_Pic-${ownerId}-${Date.now()}${fileExtension}`;
+        const targetPath = path.join("public/Blog_Pics/", uniqueSuffix);
+        fs.copyFileSync(image.path, targetPath);
+        fs.unlinkSync(image.path);
+    }
     try {
         const blog = await Blog.create({
             Title,
@@ -138,6 +214,7 @@ const add_blog = async (req, res) => {
             ownerId,
             ownerType,
             companyId,
+            image_link: image ? `/Blog_Pics/${uniqueSuffix}` : null,
         });
         return res.status(201).json({ blog });
     } catch (error) {

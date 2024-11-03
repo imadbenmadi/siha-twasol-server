@@ -1,6 +1,7 @@
 const { Event } = require("../../Models/Event");
 const { Company } = require("../../Models/Company");
-
+const fs = require("fs");
+const path = require("path");
 // Get all events
 const get_All = async (req, res) => {
     try {
@@ -58,23 +59,76 @@ const get_by_id = async (req, res) => {
 // Edit event details
 const edit_event = async (req, res) => {
     const { eventId } = req.params;
-    if (!eventId) {
-        return res.status(400).json({ message: "eventId is required." });
-    }
+    const { Title, Description } = req.body;
+    const { image } = req.files || {}; // Destructure and handle when image is not provided
+    const updates = {};
 
-    const { Title, Description, ownerId, ownerType } = req.body;
+    if (Title) updates.Title = Title;
+    if (Description) updates.Description = Description;
 
     try {
-        const event = await Event.findOne({ where: { id: eventId } });
+        // Fetch the event record by ID
+        const event = await Event.findByPk(eventId);
         if (!event) {
             return res.status(404).json({ message: "Event not found." });
         }
 
-        await event.update({ Title, Description, ownerId, ownerType });
+        // Handle image replacement if a new image file is provided
+        if (image) {
+            console.log("Uploaded image MIME type:", image.mimetype);
+
+            // Check MIME type or file extension as a fallback
+            const allowedMimeTypes = [
+                "image/jpeg",
+                "image/png",
+                "image/jpg",
+                "image/heic",
+            ];
+            const fileExtension = path.extname(image.name).toLowerCase();
+
+            if (
+                !allowedMimeTypes.includes(image.mimetype) &&
+                ![".jpeg", ".jpg", ".png", ".heic"].includes(fileExtension)
+            ) {
+                return res.status(400).json({
+                    message: "Only JPEG, PNG, and HEIC images are allowed!",
+                });
+            }
+
+            // Delete the old image if it exists
+            if (event.image_link) {
+                const previousFilename = path.basename(event.image_link);
+                const previousImagePath = path.join(
+                    "public/Event_Pics",
+                    previousFilename
+                );
+                try {
+                    if (fs.existsSync(previousImagePath)) {
+                        fs.unlinkSync(previousImagePath);
+                    }
+                } catch (error) {
+                    console.error("Error deleting previous image:", error);
+                }
+            }
+
+            // Create a unique filename and copy file to target location
+            const uniqueFilename = `Event_Pic-${eventId}-${Date.now()}${fileExtension}`;
+            const targetPath = path.join("public/Event_Pics", uniqueFilename);
+            fs.copyFileSync(image.path, targetPath);
+            fs.unlinkSync(image.path);
+
+            // Update the event's image_link field with the new path
+            updates.image_link = `/Event_Pics/${uniqueFilename}`;
+        }
+
+        // Apply updates to the event record
+        await event.update(updates);
         return res.status(200).json({ message: "Event updated successfully." });
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Internal server error." });
+        console.error("Error updating event:", error);
+        return res
+            .status(500)
+            .json({ message: "Failed to update event due to server error." });
     }
 };
 
@@ -119,7 +173,28 @@ const add_event = async (req, res) => {
     if (!Title || !ownerId || !ownerType || !companyId) {
         return res.status(400).json({ message: "Missing required fields." });
     }
+    let uniqueSuffix = null;
+    const { image } = req.files;
+    if (image) {
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/jpg",
+            "image/heic",
+        ];
+        if (!allowedTypes.includes(image.type)) {
+            throw new Error("Only JPEG and PNG and JPG images are allowed!");
+        }
 
+        const fileExtension = path.extname(image.name).toLocaleLowerCase();
+        if (![".jpeg", ".jpg", ".png", ".heic"].includes(fileExtension)) {
+            throw new Error("Invalid file extension");
+        }
+        uniqueSuffix = `Event_Pic-${ownerId}-${Date.now()}${fileExtension}`;
+        const targetPath = path.join("public/Event_Pics/", uniqueSuffix);
+        fs.copyFileSync(image.path, targetPath);
+        fs.unlinkSync(image.path);
+    }
     try {
         const event = await Event.create({
             Title,
@@ -127,6 +202,7 @@ const add_event = async (req, res) => {
             ownerId,
             ownerType,
             companyId,
+            image_link: image ? `/Event_Pics/${uniqueSuffix}` : null,
         });
         return res.status(201).json({ event });
     } catch (error) {
