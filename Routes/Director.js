@@ -105,17 +105,17 @@ router.get(
     DirectorController.Blogs_controller.get_All
 );
 router.get(
-    "/:userId/:companyId/Blogs/:doctorId",
+    "/:userId/:companyId/Blogs/:blogId",
     Director_Middlware,
     DirectorController.Blogs_controller.get_by_id
 );
 router.put(
-    "/:userId/:companyId/Blogs/:doctorId",
+    "/:userId/:companyId/Blogs/:blogId",
     Director_Middlware,
     DirectorController.Blogs_controller.edit_blog
 );
 router.delete(
-    "/:userId/:companyId/Blogs/:doctorId",
+    "/:userId/:companyId/Blogs/:blogId",
     Director_Middlware,
     DirectorController.Blogs_controller.delete_blog
 );
@@ -132,17 +132,17 @@ router.get(
     DirectorController.Events_controller.get_All
 );
 router.get(
-    "/:userId/:companyId/Events/:doctorId",
+    "/:userId/:companyId/Events/:eventId",
     Director_Middlware,
     DirectorController.Events_controller.get_by_id
 );
 router.put(
-    "/:userId/:companyId/Events/:doctorId",
+    "/:userId/:companyId/Events/:eventId",
     Director_Middlware,
     DirectorController.Events_controller.edit_event
 );
 router.delete(
-    "/:userId/:companyId/Events/:doctorId",
+    "/:userId/:companyId/Events/:eventId",
     Director_Middlware,
     DirectorController.Events_controller.delete_event
 );
