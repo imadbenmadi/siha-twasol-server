@@ -90,7 +90,21 @@ const delete_event = async (req, res) => {
         if (!event) {
             return res.status(404).json({ message: "Event not found." });
         }
-
+        if (event?.image_link) {
+            const previousFilename = event?.image_link.split("/").pop();
+            const previousImagePath = `public/Event_Pics/${previousFilename}`;
+            try {
+                if (fs.existsSync(previousImagePath)) {
+                    fs.unlinkSync(previousImagePath);
+                }
+            } catch (error) {
+                console.error(error);
+                // return res.status(400).send({
+                //     message:
+                //         "Could not delete Event picture : " + error.message,
+                // });
+            }
+        }
         await event.destroy();
         return res.status(200).json({ message: "Event deleted successfully." });
     } catch (error) {

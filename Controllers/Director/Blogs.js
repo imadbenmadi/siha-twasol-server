@@ -1,6 +1,7 @@
 const { Blog } = require("../../Models/Blog");
 const { Company } = require("../../Models/Company");
-
+const fs = require("fs");
+const path = require("path");
 // Get all blogs
 const get_All = async (req, res) => {
     try {
@@ -58,23 +59,23 @@ const get_by_id = async (req, res) => {
 // Edit blog details
 const edit_blog = async (req, res) => {
     const { blogId } = req.params;
-    if (!blogId) {
-        return res.status(400).json({ message: "blogId is required." });
-    }
-
-    const { Title, Description } = req.body;
+    const updates = {};
+    if (req.body.Title) updates.Title = req.body.Title;
+    if (req.body.Description) updates.Description = req.body.Description;
 
     try {
-        const blog = await Blog.findOne({ where: { id: blogId } });
+        const blog = await Blog.findByPk(blogId);
         if (!blog) {
             return res.status(404).json({ message: "Blog not found." });
         }
 
-        await blog.update({ Title, Description });
+        await blog.update(updates);
         return res.status(200).json({ message: "Blog updated successfully." });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: "Internal server error." });
+        return res
+            .status(500)
+            .json({ message: "Failed to update blog due to server error." });
     }
 };
 
@@ -90,7 +91,31 @@ const delete_blog = async (req, res) => {
         if (!blog) {
             return res.status(404).json({ message: "Blog not found." });
         }
-
+        // if (blog.image_link) {
+        //     const filePath = path.join(
+        //         __dirname,
+        //         "..",
+        //         "..",
+        //         "public",
+        //         blog.image_link
+        //     );
+        //     fs.unlinkSync(filePath);
+        // }
+        if (blog?.image_link) {
+            const previousFilename = blog?.image_link.split("/").pop();
+            const previousImagePath = `public/Blog_Pics/${previousFilename}`;
+            try {
+                if (fs.existsSync(previousImagePath)) {
+                    fs.unlinkSync(previousImagePath);
+                }
+            } catch (error) {
+                console.error(error);
+                // return res.status(400).send({
+                //     message:
+                //         "Could not delete Event picture : " + error.message,
+                // });
+            }
+        }
         await blog.destroy();
         return res.status(200).json({ message: "Blog deleted successfully." });
     } catch (error) {
