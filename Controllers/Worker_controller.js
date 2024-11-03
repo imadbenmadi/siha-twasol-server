@@ -1,10 +1,11 @@
-const { getProfile } = require("./Malad/getProfile");
-const { EditeProfile } = require("./Malad/EditeProfile");
-
+const Blogs_controller = require("./Worker/Blogs");
+const Events_controller = require("./Worker/Events");
+const Profile_controller = require("./Worker/Profile");
 
 const MaladController = {
-    getProfile,
-    EditeProfile,
+    Profile_controller,
+    Blogs_controller,
+    Events_controller,
 };
 
 module.exports = MaladController;
