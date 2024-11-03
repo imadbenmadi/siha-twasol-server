@@ -16,53 +16,53 @@ router.put(
 );
 // _________________________________________________________________
 router.get(
-    "/:userId/Blogs",
+    "/:userId/:companyId/Blogs",
     Worker_Middlware,
     WorkerController.Blogs_controller.get_All
 );
 router.get(
-    "/:userId/Blogs/:blogId",
+    "/:userId/:companyId/Blogs/:blogId",
     Worker_Middlware,
     WorkerController.Blogs_controller.get_by_id
 );
 router.post(
-    "/:userId/Blogs",
+    "/:userId/:companyId/Blogs",
     Worker_Middlware,
     WorkerController.Blogs_controller.add_blog
 );
 router.put(
-    "/:userId/Blogs/:blogId",
+    "/:userId/:companyId/Blogs/:blogId",
     Worker_Middlware,
     WorkerController.Blogs_controller.edit_blog
 );
 router.delete(
-    "/:userId/Blogs/:blogId",
+    "/:userId/:companyId/Blogs/:blogId",
     Worker_Middlware,
     WorkerController.Blogs_controller.delete_blog
 );
 // _________________________________________________________________
 router.get(
-    "/:userId/Events",
+    "/:userId/:companyId/Events",
     Worker_Middlware,
     WorkerController.Events_controller.get_All
 );
 router.get(
-    "/:userId/Events/:eventId",
+    "/:userId/:companyId/Events/:eventId",
     Worker_Middlware,
     WorkerController.Events_controller.get_by_id
 );
 router.post(
-    "/:userId/Events",
+    "/:userId/:companyId/Events",
     Worker_Middlware,
     WorkerController.Events_controller.add_event
 );
 router.put(
-    "/:userId/Events/:eventId",
+    "/:userId/:companyId/Events/:eventId",
     Worker_Middlware,
     WorkerController.Events_controller.edit_event
 );
 router.delete(
-    "/:userId/Events/:eventId",
+    "/:userId/:companyId/Events/:eventId",
     Worker_Middlware,
     WorkerController.Events_controller.delete_event
 );
