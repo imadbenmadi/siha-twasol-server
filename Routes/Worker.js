@@ -25,16 +25,7 @@ router.get(
     Worker_Middlware,
     WorkerController.Blogs_controller.get_by_id
 );
-router.post(
-    "/:userId/:companyId/Blogs",
-    Worker_Middlware,
-    WorkerController.Blogs_controller.add_blog
-);
-router.put(
-    "/:userId/:companyId/Blogs/:blogId",
-    Worker_Middlware,
-    WorkerController.Blogs_controller.edit_blog
-);
+
 router.delete(
     "/:userId/:companyId/Blogs/:blogId",
     Worker_Middlware,
@@ -51,21 +42,58 @@ router.get(
     Worker_Middlware,
     WorkerController.Events_controller.get_by_id
 );
+
+
+// _____________________________
+// Formidable images
+const cookieParser = require("cookie-parser");
+const formidableMiddleware = require("express-formidable");
+router.use(cookieParser());
+router.use(formidableMiddleware());
+router.delete(
+    "/:userId/:companyId/Events/:eventId",
+    (req, res, next) => {
+        req.body = req.fields;
+        next();
+    },
+    Worker_Middlware,
+    WorkerController.Events_controller.delete_event
+);
+
+router.post(
+    "/:userId/:companyId/Blogs",
+    (req, res, next) => {
+        req.body = req.fields;
+        next();
+    },
+    Worker_Middlware,
+    WorkerController.Blogs_controller.add_blog
+);
+router.put(
+    "/:userId/:companyId/Blogs/:blogId",
+    (req, res, next) => {
+        req.body = req.fields;
+        next();
+    },
+    Worker_Middlware,
+    WorkerController.Blogs_controller.edit_blog
+);
 router.post(
     "/:userId/:companyId/Events",
+    (req, res, next) => {
+        req.body = req.fields;
+        next();
+    },
     Worker_Middlware,
     WorkerController.Events_controller.add_event
 );
 router.put(
     "/:userId/:companyId/Events/:eventId",
+    (req, res, next) => {
+        req.body = req.fields;
+        next();
+    },
     Worker_Middlware,
     WorkerController.Events_controller.edit_event
 );
-router.delete(
-    "/:userId/:companyId/Events/:eventId",
-    Worker_Middlware,
-    WorkerController.Events_controller.delete_event
-);
-
-
 module.exports = router;
