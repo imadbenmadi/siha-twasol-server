@@ -151,8 +151,9 @@ const add_doctore = async (req, res) => {
         const exist_medicin = await Medecin.findOne({ where: { email } });
         const exist_malad = await Malad.findOne({ where: { email } });
         const exist_director = await Director.findOne({ where: { email } });
+        const exist_worker = await Worker.findOne({ where: { email } });
 
-        if (exist_medicin || exist_malad || exist_director) {
+        if (exist_medicin || exist_malad || exist_director || exist_worker) {
             return res.status(400).json({
                 message: "Email already exists, please use another email.",
             });
