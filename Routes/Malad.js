@@ -9,7 +9,11 @@ router.get(
     Malad_Middlware,
     MaladController.profile_controller.getProfile
 );
-
+router.get(
+    "/:userId/Companies",
+    Malad_Middlware,
+    MaladController.Company_controller.get_All
+);
 // _____________________________
 // Formidable images
 const cookieParser = require("cookie-parser");
