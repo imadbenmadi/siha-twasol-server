@@ -1,6 +1,9 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/db_connection");
 const { Company } = require("./Company");
+const { Medecin } = require("./Medecin");
+const { Worker } = require("./Worker");
+
 const Blog = sequelize.define("Blog", {
     Title: {
         type: DataTypes.STRING,
@@ -27,5 +30,15 @@ const Blog = sequelize.define("Blog", {
         allowNull: false,
     },
 });
+
+// Associations
 Blog.belongsTo(Company, { foreignKey: "companyId" });
+Company.hasMany(Blog, { foreignKey: "companyId" });
+
+Blog.belongsTo(Medecin, { foreignKey: "ownerId" });
+Medecin.hasMany(Blog, { foreignKey: "ownerId" });
+
+Blog.belongsTo(Worker, { foreignKey: "ownerId" });
+Worker.hasMany(Blog, { foreignKey: "ownerId" });
+
 module.exports = { Blog };

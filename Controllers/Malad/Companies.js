@@ -44,7 +44,6 @@ const get_One = async (req, res) => {
             return res.status(404).json({ message: "Company not found." });
         }
 
-        console.log("Fetched Company:", company); // Log fetched data to inspect the structure
         res.status(200).json(company);
     } catch (error) {
         console.error("Failed to fetch company:", error);
