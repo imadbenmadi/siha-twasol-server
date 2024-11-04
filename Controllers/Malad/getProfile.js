@@ -1,7 +1,6 @@
 const { Malad } = require("../../Models/Malad");
 
 const getProfile = async (req, res) => {
-    const userId = req.decoded.userId;
 
     try {
         const user = await Malad.findByPk(req.decoded.userId, {
