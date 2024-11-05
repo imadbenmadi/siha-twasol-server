@@ -24,7 +24,7 @@ const get_by_id = async (req, res) => {
     try {
         const user = await Worker.findByPk(req.params.workerId, {
             include: [{ model: Company }, { model: Service }],
-            // attributes: { exclude: ["password"] },
+            attributes: { exclude: ["password"] },
         });
 
         if (!user) {

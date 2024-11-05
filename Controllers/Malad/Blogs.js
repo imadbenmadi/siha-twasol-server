@@ -27,7 +27,6 @@ const get_blogs = async (req, res) => {
             include: [
                 {
                     model: Company,
-                    attributes: ["id", "Name", "Location"],
                 },
             ],
             order: [["createdAt", "DESC"]],
@@ -37,17 +36,17 @@ const get_blogs = async (req, res) => {
         const blogsWithOwners = await Promise.all(
             priorityBlogs.map(async (blog) => {
                 let owner = null;
-                if (blog.ownerType === "doctor") {
+                if (blog.ownerType === "Doctor") {
                     owner = await Doctor.findByPk(blog.ownerId, {
-                        attributes: ["id", "name", "specialty"],
+                        attributes: { exclude: ["password"] },
                     });
-                } else if (blog.ownerType === "worker") {
+                } else if (blog.ownerType === "Worker") {
                     owner = await Worker.findByPk(blog.ownerId, {
-                        attributes: ["id", "name", "position"],
+                        attributes: { exclude: ["password"] },
                     });
-                } else if (blog.ownerType === "director") {
+                } else if (blog.ownerType === "Director") {
                     owner = await Director.findByPk(blog.ownerId, {
-                        attributes: ["id", "name", "department"],
+                        attributes: { exclude: ["password"] },
                     });
                 }
                 return {
@@ -73,7 +72,6 @@ const get_blog = async (req, res) => {
             include: [
                 {
                     model: Company,
-                    attributes: ["id", "Name", "Location"],
                 },
             ],
         });
@@ -84,17 +82,17 @@ const get_blog = async (req, res) => {
 
         // Manually fetch the owner details based on ownerType
         let owner = null;
-        if (blog.ownerType === "doctor") {
+        if (blog.ownerType === "Doctor") {
             owner = await Doctor.findByPk(blog.ownerId, {
-                attributes: ["id", "name", "specialty"],
+                attributes: { exclude: ["password"] },
             });
-        } else if (blog.ownerType === "worker") {
+        } else if (blog.ownerType === "Worker") {
             owner = await Worker.findByPk(blog.ownerId, {
-                attributes: ["id", "name", "position"],
+                attributes: { exclude: ["password"] },
             });
-        } else if (blog.ownerType === "director") {
+        } else if (blog.ownerType === "Director") {
             owner = await Director.findByPk(blog.ownerId, {
-                attributes: ["id", "name", "department"],
+                attributes: { exclude: ["password"] },
             });
         }
 

@@ -27,7 +27,6 @@ const get_events = async (req, res) => {
             include: [
                 {
                     model: Company,
-                    attributes: ["id", "Name", "Location"],
                 },
             ],
             order: [["createdAt", "DESC"]],
@@ -37,17 +36,17 @@ const get_events = async (req, res) => {
         const eventsWithOwners = await Promise.all(
             priorityEvents.map(async (event) => {
                 let owner = null;
-                if (event.ownerType === "doctor") {
+                if (event.ownerType === "Doctor") {
                     owner = await Doctor.findByPk(event.ownerId, {
-                        attributes: ["id", "name", "specialty"],
+                        attributes: { exclude: ["password"] },
                     });
-                } else if (event.ownerType === "worker") {
+                } else if (event.ownerType === "Worker") {
                     owner = await Worker.findByPk(event.ownerId, {
-                        attributes: ["id", "name", "position"],
+                        attributes: { exclude: ["password"] },
                     });
-                } else if (event.ownerType === "director") {
+                } else if (event.ownerType === "Director") {
                     owner = await Director.findByPk(event.ownerId, {
-                        attributes: ["id", "name", "department"],
+                        attributes: { exclude: ["password"] },
                     });
                 }
                 return {
@@ -63,7 +62,6 @@ const get_events = async (req, res) => {
             include: [
                 {
                     model: Company,
-                    attributes: ["id", "Name", "Location"],
                 },
             ],
             order: [["createdAt", "DESC"]],
@@ -73,17 +71,17 @@ const get_events = async (req, res) => {
         const otherEventsWithOwners = await Promise.all(
             otherEvents.map(async (event) => {
                 let owner = null;
-                if (event.ownerType === "doctor") {
+                if (event.ownerType === "Doctor") {
                     owner = await Doctor.findByPk(event.ownerId, {
-                        attributes: ["id", "name", "specialty"],
+                        attributes: { exclude: ["password"] },
                     });
-                } else if (event.ownerType === "worker") {
+                } else if (event.ownerType === "Worker") {
                     owner = await Worker.findByPk(event.ownerId, {
-                        attributes: ["id", "name", "position"],
+                        attributes: { exclude: ["password"] },
                     });
-                } else if (event.ownerType === "director") {
+                } else if (event.ownerType === "Director") {
                     owner = await Director.findByPk(event.ownerId, {
-                        attributes: ["id", "name", "department"],
+                        attributes: { exclude: ["password"] },
                     });
                 }
                 return {
