@@ -28,10 +28,22 @@ const get_One = async (req, res) => {
                 {
                     model: Blog,
                     as: "Blogs",
+                    include: [
+                        {
+                            model: Doctor,
+                            // as: "Owner",
+                        },
+                    ],
                 },
                 {
                     model: Event,
                     as: "Events",
+                    include: [
+                        {
+                            model: Doctor,
+                            // as: "Owner",
+                        },
+                    ],
                 },
                 {
                     model: Doctor,
