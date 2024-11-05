@@ -8,7 +8,9 @@ const get_All = async (req, res) => {
     if (!req.params.companyId)
         return res.status(400).json({ message: "companyId is required." });
     try {
-        const services = await Service.findAll({});
+        const services = await Service.findAll({
+            where: { companyId: req.params.companyId },
+        });
         return res.status(200).json({ services: services });
     } catch (error) {
         console.log(error);

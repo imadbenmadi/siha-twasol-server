@@ -4,10 +4,16 @@ const fs = require("fs");
 const path = require("path");
 // Get all events
 const get_All = async (req, res) => {
+    if (!req.params.companyId) {
+        return res.status(400).json({ message: "companyId is required." });
+    }
     try {
-        const events = await Event.findAll({
-            include: [{ model: Company }],
-        });
+        const events = await Event.findAll(
+            { where: { companyId: req.params.companyId } },
+            {
+                include: [{ model: Company }],
+            }
+        );
         return res.status(200).json({ events });
     } catch (error) {
         console.error(error);

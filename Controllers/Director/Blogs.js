@@ -1,13 +1,20 @@
+const { where } = require("sequelize");
 const { Blog } = require("../../Models/Blog");
 const { Company } = require("../../Models/Company");
 const fs = require("fs");
 const path = require("path");
 // Get all blogs
 const get_All = async (req, res) => {
+    if (!req.params.companyId) {
+        return res.status(400).json({ message: "companyId is required." });
+    }
     try {
-        const blogs = await Blog.findAll({
-            include: [{ model: Company }],
-        });
+        const blogs = await Blog.findAll(
+            { where: { companyId: req.params.companyId } },
+            {
+                include: [{ model: Company }],
+            }
+        );
         return res.status(200).json({ blogs });
     } catch (error) {
         console.error(error);
@@ -90,11 +97,9 @@ const edit_blog = async (req, res) => {
                 !allowedMimeTypes.includes(image.mimetype) &&
                 ![".jpeg", ".jpg", ".png", ".heic"].includes(fileExtension)
             ) {
-                return res
-                    .status(400)
-                    .json({
-                        message: "Only JPEG, PNG, and HEIC images are allowed!",
-                    });
+                return res.status(400).json({
+                    message: "Only JPEG, PNG, and HEIC images are allowed!",
+                });
             }
 
             // Delete the old image if it exists
