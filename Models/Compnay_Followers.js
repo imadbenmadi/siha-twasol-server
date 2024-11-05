@@ -1,14 +1,10 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/db_connection");
 
-// Simple Doctor_Followers model
-const Doctor_Followers = sequelize.define(
-    "Doctor_Followers",
+// Updated Company_Followers model to reflect follow relationship between Malad and Company
+const Company_Followers = sequelize.define(
+    "Company_Followers",
     {
-        doctorId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
         maladId: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -23,4 +19,4 @@ const Doctor_Followers = sequelize.define(
     }
 );
 
-module.exports = { Doctor_Followers };
+module.exports = { Company_Followers };

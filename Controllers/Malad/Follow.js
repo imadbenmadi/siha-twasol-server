@@ -1,71 +1,73 @@
-const { Doctor_Followers } = require("../../models/Doctor_Followers");
+const { Company_Followers } = require("../../models/Compnay_Followers");
 
-// Follow a Doctor
-
-exports.followDoctor = async (req, res) => {
-    const { doctorId, maladId, companyId } = req.body;
+// Follow a Company
+exports.followCompany = async (req, res) => {
+    const { userId, companyId } = req.params;
 
     try {
         // Check if the follow relationship already exists
-        const existingFollow = await Doctor_Followers.findOne({
-            where: { doctorId, maladId, companyId },
+        const existingFollow = await Company_Followers.findOne({
+            where: { maladId: userId, companyId },
         });
 
         if (existingFollow) {
             return res
                 .status(400)
-                .json({ message: "You are already following this doctor." });
+                .json({ message: "You are already following this company." });
         }
 
         // Create the follow relationship
-        await Doctor_Followers.create({ doctorId, maladId, companyId });
-        res.status(201).json({ message: "Successfully followed the doctor." });
+        await Company_Followers.create({ maladId: userId, companyId });
+        res.status(201).json({ message: "Successfully followed the company." });
     } catch (error) {
+        console.error("Failed to follow the company:", error);
         res.status(500).json({
-            message: "Failed to follow the doctor.",
+            message: "Failed to follow the company.",
             error,
         });
     }
 };
 
-// Unfollow a Doctor
-exports.unfollowDoctor = async (req, res) => {
-    const { doctorId, maladId, companyId } = req.body;
+// Unfollow a Company
+exports.unfollowCompany = async (req, res) => {
+    const { userId, companyId } = req.params;
 
     try {
         // Find and remove the follow relationship
-        const unfollow = await Doctor_Followers.destroy({
-            where: { doctorId, maladId, companyId },
+        const unfollow = await Company_Followers.destroy({
+            where: { maladId: userId, companyId },
         });
 
         if (unfollow) {
             res.status(200).json({
-                message: "Successfully unfollowed the doctor.",
+                message: "Successfully unfollowed the company.",
             });
         } else {
             res.status(404).json({ message: "Follow relationship not found." });
         }
     } catch (error) {
+        console.error("Failed to unfollow the company:", error);
         res.status(500).json({
-            message: "Failed to unfollow the doctor.",
+            message: "Failed to unfollow the company.",
             error,
         });
     }
 };
 
-// Get Followers of a Doctor
+// Get Followers of a Company
 exports.getFollowers = async (req, res) => {
-    const { doctorId } = req.params;
+    const { companyId } = req.params;
 
     try {
-        // Retrieve all followers for the specified doctor
-        const followers = await Doctor_Followers.findAll({
-            where: { doctorId },
+        // Retrieve all followers for the specified company
+        const followers = await Company_Followers.findAll({
+            where: { companyId },
             attributes: ["maladId", "companyId", "createdAt"],
         });
 
         res.status(200).json(followers);
     } catch (error) {
+        console.error("Failed to retrieve followers:", error);
         res.status(500).json({
             message: "Failed to retrieve followers.",
             error,

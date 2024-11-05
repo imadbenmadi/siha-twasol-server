@@ -1,17 +1,17 @@
+const { Company_Followers } = require("../../Models/Compnay_Followers");
 const { Op } = require("sequelize");
 const { Company } = require("../../Models/Company");
-const { Blog } = require("../../Models/Blog");
+const { Event } = require("../../Models/Event");
 const { Worker } = require("../../Models/Worker");
 const { Doctor } = require("../../Models/Doctor");
 const { Director } = require("../../Models/Director");
-const { Doctor_Followers } = require("../../Models/Doctor_Followers");
 
-const get_blogs = async (req, res) => {
+const get_events = async (req, res) => {
     const { userId } = req.params;
 
     try {
-        // Step 1: Find companies the user follows
-        const followedCompanies = await Doctor_Followers.findAll({
+        // Step 1: Find companies that the user follows
+        const followedCompanies = await Company_Followers.findAll({
             where: { maladId: userId },
             attributes: ["companyId"],
         });
@@ -21,8 +21,8 @@ const get_blogs = async (req, res) => {
             (follow) => follow.companyId
         );
 
-        // Step 2: Retrieve blogs from followed companies
-        const priorityBlogs = await Blog.findAll({
+        // Step 2: Retrieve events from followed companies, ordered by date
+        const priorityEvents = await Event.findAll({
             where: { companyId: followedCompanyIds },
             include: [
                 {
@@ -33,82 +33,43 @@ const get_blogs = async (req, res) => {
             order: [["createdAt", "DESC"]],
         });
 
-        // Manually attach owner details to each blog
-        const blogsWithOwners = await Promise.all(
-            priorityBlogs.map(async (blog) => {
+        // Manually attach owner details to each event based on ownerType
+        const eventsWithOwners = await Promise.all(
+            priorityEvents.map(async (event) => {
                 let owner = null;
-                if (blog.ownerType === "doctor") {
-                    owner = await Doctor.findByPk(blog.ownerId, {
+                if (event.ownerType === "doctor") {
+                    owner = await Doctor.findByPk(event.ownerId, {
                         attributes: ["id", "name", "specialty"],
                     });
-                } else if (blog.ownerType === "worker") {
-                    owner = await Worker.findByPk(blog.ownerId, {
+                } else if (event.ownerType === "worker") {
+                    owner = await Worker.findByPk(event.ownerId, {
                         attributes: ["id", "name", "position"],
                     });
-                } else if (blog.ownerType === "director") {
-                    owner = await Director.findByPk(blog.ownerId, {
+                } else if (event.ownerType === "director") {
+                    owner = await Director.findByPk(event.ownerId, {
                         attributes: ["id", "name", "department"],
                     });
                 }
                 return {
-                    ...blog.toJSON(),
+                    ...event.toJSON(),
                     Owner: owner ? owner.toJSON() : null,
                 };
             })
         );
 
-        // Step 3: Retrieve blogs from non-followed companies
-        const otherBlogs = await Blog.findAll({
-            where: { companyId: { [Op.notIn]: followedCompanyIds } },
-            include: [
-                {
-                    model: Company,
-                    attributes: ["id", "Name", "Location"],
-                },
-            ],
-            order: [["createdAt", "DESC"]],
-        });
-
-        // Attach owner details to each blog from non-followed companies
-        const otherBlogsWithOwners = await Promise.all(
-            otherBlogs.map(async (blog) => {
-                let owner = null;
-                if (blog.ownerType === "doctor") {
-                    owner = await Doctor.findByPk(blog.ownerId, {
-                        attributes: ["id", "name", "specialty"],
-                    });
-                } else if (blog.ownerType === "worker") {
-                    owner = await Worker.findByPk(blog.ownerId, {
-                        attributes: ["id", "name", "position"],
-                    });
-                } else if (blog.ownerType === "director") {
-                    owner = await Director.findByPk(blog.ownerId, {
-                        attributes: ["id", "name", "department"],
-                    });
-                }
-                return {
-                    ...blog.toJSON(),
-                    Owner: owner ? owner.toJSON() : null,
-                };
-            })
-        );
-
-        // Combine priority and other blogs
-        const allBlogs = [...blogsWithOwners, ...otherBlogsWithOwners];
-
-        // Step 4: Send the response
-        res.status(200).json({ blogs: allBlogs });
+        // Step 3: Send response with prioritized events
+        res.status(200).json({ events: eventsWithOwners });
     } catch (error) {
-        console.error("Failed to retrieve blogs:", error);
-        res.status(500).json({ message: "Failed to retrieve blogs.", error });
+        console.error("Failed to retrieve events:", error);
+        res.status(500).json({ message: "Failed to retrieve events.", error });
     }
 };
 
-const get_blog = async (req, res) => {
-    const { blogId } = req.params;
+const get_event = async (req, res) => {
+    const { eventId } = req.params;
 
     try {
-        const blog = await Blog.findByPk(blogId, {
+        const event = await Event.findByPk(eventId, {
             include: [
                 {
                     model: Company,
@@ -117,39 +78,39 @@ const get_blog = async (req, res) => {
             ],
         });
 
-        if (!blog) {
-            return res.status(404).json({ message: "Blog not found." });
+        if (!event) {
+            return res.status(404).json({ message: "Event not found." });
         }
 
         // Manually fetch the owner details based on ownerType
         let owner = null;
-        if (blog.ownerType === "doctor") {
-            owner = await Doctor.findByPk(blog.ownerId, {
+        if (event.ownerType === "doctor") {
+            owner = await Doctor.findByPk(event.ownerId, {
                 attributes: ["id", "name", "specialty"],
             });
-        } else if (blog.ownerType === "worker") {
-            owner = await Worker.findByPk(blog.ownerId, {
+        } else if (event.ownerType === "worker") {
+            owner = await Worker.findByPk(event.ownerId, {
                 attributes: ["id", "name", "position"],
             });
-        } else if (blog.ownerType === "director") {
-            owner = await Director.findByPk(blog.ownerId, {
+        } else if (event.ownerType === "director") {
+            owner = await Director.findByPk(event.ownerId, {
                 attributes: ["id", "name", "department"],
             });
         }
 
-        const blogWithOwner = {
-            ...blog.toJSON(),
+        const eventWithOwner = {
+            ...event.toJSON(),
             Owner: owner ? owner.toJSON() : null,
         };
 
-        res.status(200).json(blogWithOwner);
+        res.status(200).json(eventWithOwner);
     } catch (error) {
-        console.error("Failed to retrieve blog:", error);
+        console.error("Failed to retrieve event:", error);
         res.status(500).json({
-            message: "Failed to retrieve the blog.",
+            message: "Failed to retrieve the event.",
             error,
         });
     }
 };
 
-module.exports = { get_blogs, get_blog };
+module.exports = { get_events, get_event };

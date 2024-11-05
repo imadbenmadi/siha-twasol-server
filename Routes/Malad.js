@@ -19,15 +19,16 @@ router.get(
     Malad_Middlware,
     MaladController.Company_controller.get_One
 );
+// _____________________________
 router.post(
-    "/:userId/Companies/:companyId/Doctors/:doctoreId/Follow",
+    "/:userId/Companies/:companyId/Follow",
     Malad_Middlware,
-    MaladController.Follow_controller.followDoctor
+    MaladController.Follow_controller.followCompany
 );
 router.post(
-    "/:userId/Companies/:companyId/Doctors/:doctoreId/Unfollow",
+    "/:userId/Companies/:companyId/Unfollow",
     Malad_Middlware,
-    MaladController.Follow_controller.unfollowDoctor
+    MaladController.Follow_controller.unfollowCompany
 );
 
 router.get(

@@ -1,7 +1,7 @@
-const { Doctor_Followers } = require("../../Models/Doctor_Followers");
+const { Company_Followers } = require("../../Models/Company_Followers");
 const { Op } = require("sequelize");
 const { Company } = require("../../Models/Company");
-const { ddEvent } = require("../../Models/Event");
+const { Event } = require("../../Models/Event");
 const { Worker } = require("../../Models/Worker");
 const { Doctor } = require("../../Models/Doctor");
 const { Director } = require("../../Models/Director");
@@ -11,7 +11,7 @@ const get_events = async (req, res) => {
 
     try {
         // Step 1: Find companies that the user follows
-        const followedCompanies = await Doctor_Followers.findAll({
+        const followedCompanies = await Company_Followers.findAll({
             where: { maladId: userId },
             attributes: ["companyId"],
         });
@@ -22,7 +22,7 @@ const get_events = async (req, res) => {
         );
 
         // Step 2: Retrieve events from followed companies
-        const priorityEvents = await ddEvent.findAll({
+        const priorityEvents = await Event.findAll({
             where: { companyId: followedCompanyIds },
             include: [
                 {
@@ -58,7 +58,7 @@ const get_events = async (req, res) => {
         );
 
         // Step 3: Retrieve events from non-followed companies
-        const otherEvents = await ddEvent.findAll({
+        const otherEvents = await Event.findAll({
             where: { companyId: { [Op.notIn]: followedCompanyIds } },
             include: [
                 {
@@ -108,7 +108,7 @@ const get_event = async (req, res) => {
     const { eventId } = req.params;
 
     try {
-        const event = await ddEvent.findByPk(eventId, {
+        const event = await Event.findByPk(eventId, {
             include: [
                 {
                     model: Company,
