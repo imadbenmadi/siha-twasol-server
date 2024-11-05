@@ -1,4 +1,4 @@
-const { Company_Followers } = require("../../models/Compnay_Followers");
+const { Company_Followers } = require("../../Models/Compnay_Followers");
 
 // Follow a Company
 exports.followCompany = async (req, res) => {

@@ -9,6 +9,8 @@ const allowedOrigins = [
     "https://scs-tawassolsihi.com/",
     "https://scs-tawassolsihi.com",
     "https://www.scs-tawassolsihi.com/",
+    "https://dashboard.scs-tawassolsihi.com",
+    "https://dashboard.scs-tawassolsihi.com/",
 ];
 const corsOptions = {
     origin: (origin, callback) => {
@@ -34,7 +36,7 @@ app.use(credentials);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const { initializeDirectories } = require("./helpers/Directory.helper");
+const { initializeDirectories } = require("./Helpers/Directory.helper");
 initializeDirectories();
 app.use("/", express.static(path.join(__dirname, "/public")));
 
@@ -58,18 +60,6 @@ app.use("/Workers", require("./Routes/Worker"));
 app.use("/Doctors", require("./Routes/Doctor"));
 app.use("/Malads", require("./Routes/Malad"));
 
-const { Event } = require("./Models/Event");
-const { Adv } = require("./Models/Adv");
-const { Blog } = require("./Models/Blog");
-const { Company } = require("./Models/Company");
-const { Contact_Messages } = require("./Models/Contact_Messages");
-const { Malad } = require("./Models/Malad");
-const { Doctor } = require("./Models/Doctor");
-const { Messages } = require("./Models/Messages");
-const { Director } = require("./Models/Director");
-const { Rates } = require("./Models/Rates");
-const { RefreshTokens } = require("./Models/RefreshTokens");
-const { Worker } = require("./Models/Worker");
 app.use("/Privacy", require("./Routes/Privacy"));
 
 app.listen(3000);

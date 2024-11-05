@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const Admin_midllware = require("../../Middlewares/Admin_middleware");
-const { Op } = require("sequelize");
 
 const { Malad } = require("../../Models/Malad");
 const { Doctor } = require("../../Models/Doctor");
