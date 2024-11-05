@@ -1,6 +1,7 @@
-const { Doctor_Followers } = require("../models/Doctor_Followers");
+const { Doctor_Followers } = require("../../models/Doctor_Followers");
 
 // Follow a Doctor
+
 exports.followDoctor = async (req, res) => {
     const { doctorId, maladId, companyId } = req.body;
 

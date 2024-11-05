@@ -21,7 +21,7 @@ const get_blogs = async (req, res) => {
             (follow) => follow.companyId
         );
 
-        // Step 2: Retrieve blogs from followed companies with author info
+        // Step 2: Retrieve blogs from followed companies
         const priorityBlogs = await Blog.findAll({
             where: { companyId: followedCompanyIds },
             include: [
@@ -29,30 +29,35 @@ const get_blogs = async (req, res) => {
                     model: Company,
                     attributes: ["id", "Name", "Location"],
                 },
-                // Include user details based on ownerType
-                {
-                    model: Worker,
-                    required: false,
-                    where: { ownerType: "worker" },
-                    attributes: ["id", "name", "position"],
-                },
-                {
-                    model: Doctor,
-                    required: false,
-                    where: { ownerType: "doctor" },
-                    attributes: ["id", "name", "specialty"],
-                },
-                {
-                    model: Director,
-                    required: false,
-                    where: { ownerType: "director" },
-                    attributes: ["id", "name", "department"],
-                },
             ],
             order: [["createdAt", "DESC"]],
         });
 
-        // Step 3: (Optional) Retrieve blogs from non-followed companies
+        // Manually attach owner details to each blog
+        const blogsWithOwners = await Promise.all(
+            priorityBlogs.map(async (blog) => {
+                let owner = null;
+                if (blog.ownerType === "doctor") {
+                    owner = await Doctor.findByPk(blog.ownerId, {
+                        attributes: ["id", "name", "specialty"],
+                    });
+                } else if (blog.ownerType === "worker") {
+                    owner = await Worker.findByPk(blog.ownerId, {
+                        attributes: ["id", "name", "position"],
+                    });
+                } else if (blog.ownerType === "director") {
+                    owner = await Director.findByPk(blog.ownerId, {
+                        attributes: ["id", "name", "department"],
+                    });
+                }
+                return {
+                    ...blog.toJSON(),
+                    Owner: owner ? owner.toJSON() : null,
+                };
+            })
+        );
+
+        // Step 3: Retrieve blogs from non-followed companies
         const otherBlogs = await Blog.findAll({
             where: { companyId: { [Op.notIn]: followedCompanyIds } },
             include: [
@@ -60,34 +65,41 @@ const get_blogs = async (req, res) => {
                     model: Company,
                     attributes: ["id", "Name", "Location"],
                 },
-                {
-                    model: Worker,
-                    required: false,
-                    where: { ownerType: "worker" },
-                    attributes: ["id", "name", "position"],
-                },
-                {
-                    model: Doctor,
-                    required: false,
-                    where: { ownerType: "doctor" },
-                    attributes: ["id", "name", "specialty"],
-                },
-                {
-                    model: Director,
-                    required: false,
-                    where: { ownerType: "director" },
-                    attributes: ["id", "name", "department"],
-                },
             ],
             order: [["createdAt", "DESC"]],
         });
 
+        // Attach owner details to each blog from non-followed companies
+        const otherBlogsWithOwners = await Promise.all(
+            otherBlogs.map(async (blog) => {
+                let owner = null;
+                if (blog.ownerType === "doctor") {
+                    owner = await Doctor.findByPk(blog.ownerId, {
+                        attributes: ["id", "name", "specialty"],
+                    });
+                } else if (blog.ownerType === "worker") {
+                    owner = await Worker.findByPk(blog.ownerId, {
+                        attributes: ["id", "name", "position"],
+                    });
+                } else if (blog.ownerType === "director") {
+                    owner = await Director.findByPk(blog.ownerId, {
+                        attributes: ["id", "name", "department"],
+                    });
+                }
+                return {
+                    ...blog.toJSON(),
+                    Owner: owner ? owner.toJSON() : null,
+                };
+            })
+        );
+
         // Combine priority and other blogs
-        const allBlogs = [...priorityBlogs, ...otherBlogs];
+        const allBlogs = [...blogsWithOwners, ...otherBlogsWithOwners];
 
         // Step 4: Send the response
         res.status(200).json({ blogs: allBlogs });
     } catch (error) {
+        console.error("Failed to retrieve blogs:", error);
         res.status(500).json({ message: "Failed to retrieve blogs.", error });
     }
 };
@@ -102,24 +114,6 @@ const get_blog = async (req, res) => {
                     model: Company,
                     attributes: ["id", "Name", "Location"],
                 },
-                {
-                    model: Worker,
-                    required: false,
-                    where: { ownerType: "worker" },
-                    attributes: ["id", "name", "position"],
-                },
-                {
-                    model: Doctor,
-                    required: false,
-                    where: { ownerType: "doctor" },
-                    attributes: ["id", "name", "specialty"],
-                },
-                {
-                    model: Director,
-                    required: false,
-                    where: { ownerType: "director" },
-                    attributes: ["id", "name", "department"],
-                },
             ],
         });
 
@@ -127,8 +121,30 @@ const get_blog = async (req, res) => {
             return res.status(404).json({ message: "Blog not found." });
         }
 
-        res.status(200).json(blog);
+        // Manually fetch the owner details based on ownerType
+        let owner = null;
+        if (blog.ownerType === "doctor") {
+            owner = await Doctor.findByPk(blog.ownerId, {
+                attributes: ["id", "name", "specialty"],
+            });
+        } else if (blog.ownerType === "worker") {
+            owner = await Worker.findByPk(blog.ownerId, {
+                attributes: ["id", "name", "position"],
+            });
+        } else if (blog.ownerType === "director") {
+            owner = await Director.findByPk(blog.ownerId, {
+                attributes: ["id", "name", "department"],
+            });
+        }
+
+        const blogWithOwner = {
+            ...blog.toJSON(),
+            Owner: owner ? owner.toJSON() : null,
+        };
+
+        res.status(200).json(blogWithOwner);
     } catch (error) {
+        console.error("Failed to retrieve blog:", error);
         res.status(500).json({
             message: "Failed to retrieve the blog.",
             error,

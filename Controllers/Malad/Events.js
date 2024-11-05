@@ -10,7 +10,7 @@ const get_events = async (req, res) => {
     const { userId } = req.params;
 
     try {
-        // Step 1: Find companies that the user (Malad) follows
+        // Step 1: Find companies that the user follows
         const followedCompanies = await Doctor_Followers.findAll({
             where: { maladId: userId },
             attributes: ["companyId"],
@@ -21,7 +21,7 @@ const get_events = async (req, res) => {
             (follow) => follow.companyId
         );
 
-        // Step 2: Retrieve events from followed companies with author info
+        // Step 2: Retrieve events from followed companies
         const priorityEvents = await ddEvent.findAll({
             where: { companyId: followedCompanyIds },
             include: [
@@ -29,30 +29,35 @@ const get_events = async (req, res) => {
                     model: Company,
                     attributes: ["id", "Name", "Location"],
                 },
-                // Include user details based on ownerType
-                {
-                    model: Worker,
-                    required: false,
-                    where: { ownerType: "worker" },
-                    attributes: ["id", "name", "position"],
-                },
-                {
-                    model: Doctor,
-                    required: false,
-                    where: { ownerType: "doctor" },
-                    attributes: ["id", "name", "specialty"],
-                },
-                {
-                    model: Director,
-                    required: false,
-                    where: { ownerType: "director" },
-                    attributes: ["id", "name", "department"],
-                },
             ],
             order: [["createdAt", "DESC"]],
         });
 
-        // Step 3: Retrieve events from non-followed companies (optional)
+        // Manually attach owner details to each event
+        const eventsWithOwners = await Promise.all(
+            priorityEvents.map(async (event) => {
+                let owner = null;
+                if (event.ownerType === "doctor") {
+                    owner = await Doctor.findByPk(event.ownerId, {
+                        attributes: ["id", "name", "specialty"],
+                    });
+                } else if (event.ownerType === "worker") {
+                    owner = await Worker.findByPk(event.ownerId, {
+                        attributes: ["id", "name", "position"],
+                    });
+                } else if (event.ownerType === "director") {
+                    owner = await Director.findByPk(event.ownerId, {
+                        attributes: ["id", "name", "department"],
+                    });
+                }
+                return {
+                    ...event.toJSON(),
+                    Owner: owner ? owner.toJSON() : null,
+                };
+            })
+        );
+
+        // Step 3: Retrieve events from non-followed companies
         const otherEvents = await ddEvent.findAll({
             where: { companyId: { [Op.notIn]: followedCompanyIds } },
             include: [
@@ -60,34 +65,41 @@ const get_events = async (req, res) => {
                     model: Company,
                     attributes: ["id", "Name", "Location"],
                 },
-                {
-                    model: Worker,
-                    required: false,
-                    where: { ownerType: "worker" },
-                    attributes: ["id", "name", "position"],
-                },
-                {
-                    model: Doctor,
-                    required: false,
-                    where: { ownerType: "doctor" },
-                    attributes: ["id", "name", "specialty"],
-                },
-                {
-                    model: Director,
-                    required: false,
-                    where: { ownerType: "director" },
-                    attributes: ["id", "name", "department"],
-                },
             ],
             order: [["createdAt", "DESC"]],
         });
 
+        // Attach owner details to each event from non-followed companies
+        const otherEventsWithOwners = await Promise.all(
+            otherEvents.map(async (event) => {
+                let owner = null;
+                if (event.ownerType === "doctor") {
+                    owner = await Doctor.findByPk(event.ownerId, {
+                        attributes: ["id", "name", "specialty"],
+                    });
+                } else if (event.ownerType === "worker") {
+                    owner = await Worker.findByPk(event.ownerId, {
+                        attributes: ["id", "name", "position"],
+                    });
+                } else if (event.ownerType === "director") {
+                    owner = await Director.findByPk(event.ownerId, {
+                        attributes: ["id", "name", "department"],
+                    });
+                }
+                return {
+                    ...event.toJSON(),
+                    Owner: owner ? owner.toJSON() : null,
+                };
+            })
+        );
+
         // Combine priority events and other events
-        const allEvents = [...priorityEvents, ...otherEvents];
+        const allEvents = [...eventsWithOwners, ...otherEventsWithOwners];
 
         // Step 4: Send response with combined events list
         res.status(200).json({ events: allEvents });
     } catch (error) {
+        console.error("Failed to retrieve events:", error);
         res.status(500).json({ message: "Failed to retrieve events.", error });
     }
 };
@@ -102,24 +114,6 @@ const get_event = async (req, res) => {
                     model: Company,
                     attributes: ["id", "Name", "Location"],
                 },
-                {
-                    model: Worker,
-                    required: false,
-                    where: { ownerType: "worker" },
-                    attributes: ["id", "name", "position"],
-                },
-                {
-                    model: Doctor,
-                    required: false,
-                    where: { ownerType: "doctor" },
-                    attributes: ["id", "name", "specialty"],
-                },
-                {
-                    model: Director,
-                    required: false,
-                    where: { ownerType: "director" },
-                    attributes: ["id", "name", "department"],
-                },
             ],
         });
 
@@ -127,8 +121,30 @@ const get_event = async (req, res) => {
             return res.status(404).json({ message: "Event not found." });
         }
 
-        res.status(200).json(event);
+        // Manually fetch the owner details based on ownerType
+        let owner = null;
+        if (event.ownerType === "doctor") {
+            owner = await Doctor.findByPk(event.ownerId, {
+                attributes: ["id", "name", "specialty"],
+            });
+        } else if (event.ownerType === "worker") {
+            owner = await Worker.findByPk(event.ownerId, {
+                attributes: ["id", "name", "position"],
+            });
+        } else if (event.ownerType === "director") {
+            owner = await Director.findByPk(event.ownerId, {
+                attributes: ["id", "name", "department"],
+            });
+        }
+
+        const eventWithOwner = {
+            ...event.toJSON(),
+            Owner: owner ? owner.toJSON() : null,
+        };
+
+        res.status(200).json(eventWithOwner);
     } catch (error) {
+        console.error("Failed to retrieve event:", error);
         res.status(500).json({
             message: "Failed to retrieve the event.",
             error,

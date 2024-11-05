@@ -1,8 +1,6 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db_connection");
 const { Company } = require("./Company");
-const { Doctor } = require("./Doctor");
-const { Worker } = require("./Worker");
 
 const Blog = sequelize.define("Blog", {
     Title: {
@@ -19,26 +17,24 @@ const Blog = sequelize.define("Blog", {
     },
     ownerId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false, // No foreign key constraint
     },
     ownerType: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING, // "Doctor", "Worker", or "Director"
         allowNull: false,
     },
     companyId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+            model: Company,
+            key: "id",
+        },
     },
 });
 
-// Associations
+// Only keep the Company association
 Blog.belongsTo(Company, { foreignKey: "companyId" });
 Company.hasMany(Blog, { foreignKey: "companyId" });
-
-Blog.belongsTo(Doctor, { foreignKey: "ownerId" });
-Doctor.hasMany(Blog, { foreignKey: "ownerId" });
-
-Blog.belongsTo(Worker, { foreignKey: "ownerId" });
-Worker.hasMany(Blog, { foreignKey: "ownerId" });
 
 module.exports = { Blog };

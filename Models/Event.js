@@ -1,8 +1,7 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db_connection");
 const { Company } = require("./Company");
-const { Doctor } = require("./Doctor");
-const { Worker } = require("./Worker");
+
 const Event = sequelize.define("Event", {
     Title: {
         type: DataTypes.STRING,
@@ -19,21 +18,24 @@ const Event = sequelize.define("Event", {
     ownerId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        // No foreign key constraint here
     },
     ownerType: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING, // This will be "Doctor", "Worker", or "Director"
         allowNull: false,
     },
     companyId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+            model: Company,
+            key: "id",
+        },
     },
 });
+
+// Only keep the Company association
 Event.belongsTo(Company, { foreignKey: "companyId" });
 Company.hasMany(Event, { foreignKey: "companyId" });
-Event.belongsTo(Doctor, { foreignKey: "ownerId" });
-Doctor.hasMany(Event, { foreignKey: "ownerId" });
-Event.belongsTo(Worker, { foreignKey: "ownerId" });
-Worker.hasMany(Event, { foreignKey: "ownerId" });
 
 module.exports = { Event };
