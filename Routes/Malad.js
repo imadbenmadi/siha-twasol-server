@@ -19,6 +19,37 @@ router.get(
     Malad_Middlware,
     MaladController.Company_controller.get_One
 );
+router.post(
+    "/:userId/Companies/:companyId/Follow",
+    Malad_Middlware,
+    MaladController.Company_controller.get_One
+);
+router.post(
+    "/:userId/Companies/:companyId/Unfollow",
+    Malad_Middlware,
+    MaladController.Company_controller.get_One
+);
+
+router.get(
+    "/:userId/Blogs",
+    Malad_Middlware,
+    MaladController.Blog_controller.get_blogs
+);
+router.get(
+    "/:userId/Blogs/:blogId",
+    Malad_Middlware,
+    MaladController.Blog_controller.get_blog
+);
+router.get(
+    "/:userId/Events",
+    Malad_Middlware,
+    MaladController.Event_controller.get_events
+);
+router.get(
+    "/:userId/Events/:eventId",
+    Malad_Middlware,
+    MaladController.Event_controller.get_event
+);
 
 // _____________________________
 // Formidable images
