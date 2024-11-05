@@ -1,6 +1,6 @@
 const { Director } = require("../../Models/Director");
 const { Worker } = require("../../Models/Worker");
-const { Medecin } = require("../../Models/Medecin");
+const { Doctor } = require("../../Models/Doctor");
 const { Malad } = require("../../Models/Malad");
 const { Service } = require("../../Models/Company");
 const { Company } = require("../../Models/Company");
@@ -52,7 +52,7 @@ const edit_worker = async (req, res) => {
             return res.status(404).json({ message: "user not found." });
         }
         if (user.email != email) {
-            const exist_medicin = await Medecin.findOne({
+            const exist_medicin = await Doctor.findOne({
                 where: { email: email },
             });
             const exist_worker = await Worker.findOne({
@@ -120,7 +120,7 @@ const add_worker = async (req, res) => {
     )
         return res.status(400).json({ message: "messing data" });
     try {
-        const exist_medicin = await Medecin.findOne({
+        const exist_medicin = await Doctor.findOne({
             where: { email: email },
         });
         const exist_worker = await Worker.findOne({

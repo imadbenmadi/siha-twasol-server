@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { Refresh_tokens } = require("../Models/RefreshTokens");
-const { Medecin } = require("../Models/Medecin");
+const { Doctor } = require("../Models/Doctor");
 
-const verifymedecin = async (req, res, next) => {
+const verifydoctor = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
     if (!accessToken || !refreshToken) {
@@ -28,26 +28,26 @@ const verifymedecin = async (req, res, next) => {
         let decoded = null;
         decoded = jwt.verify(
             accessToken,
-            process.env.Medecin_ACCESS_TOKEN_SECRET
+            process.env.Doctor_ACCESS_TOKEN_SECRET
         );
         if (!decoded.userId || !decoded.userType)
             return res.status(401).json({
                 message: "unauthorized : Invalid tokens",
             });
-        else if (decoded.userType != "Medecin") {
+        else if (decoded.userType != "Doctor") {
             return res.status(401).json({
                 message: "unauthorized : Invalid tokens ",
             });
-        } else if (decoded.userType == "Medecin") {
-            let medecin = await Medecin.findOne({
+        } else if (decoded.userType == "Doctor") {
+            let doctor = await Doctor.findOne({
                 where: { id: decoded.userId },
             });
-            if (!medecin) {
+            if (!doctor) {
                 return res.status(401).json({
                     message: "unauthorized : Invalid tokens ",
                 });
             }
-            // req.user = medecin;
+            // req.user = doctor;
         } else
             return res.status(401).json({
                 message: "unauthorized : Invalid tokens ",
@@ -81,20 +81,20 @@ const verifymedecin = async (req, res, next) => {
 
                 jwt.verify(
                     refreshToken,
-                    process.env.medecin_REFRESH_TOKEN_SECRET,
+                    process.env.doctor_REFRESH_TOKEN_SECRET,
                     async (err, decoded) => {
                         if (err || foundInDB.userId !== decoded.userId) {
                             return res.status(401).json({
                                 message: "unauthorized : Invalid tokens",
                             });
                         }
-                        if (decoded.userType == "Medecin") {
+                        if (decoded.userType == "Doctor") {
                             let newAccessToken = jwt.sign(
                                 {
                                     userId: decoded.userId,
                                     userType: decoded.userType,
                                 },
-                                process.env.Medecin_ACCESS_TOKEN_SECRET,
+                                process.env.Doctor_ACCESS_TOKEN_SECRET,
                                 { expiresIn: "1h" }
                             );
 
@@ -122,4 +122,4 @@ const verifymedecin = async (req, res, next) => {
     }
 };
 
-module.exports = verifymedecin;
+module.exports = verifydoctor;

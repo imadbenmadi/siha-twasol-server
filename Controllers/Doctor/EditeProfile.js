@@ -1,12 +1,12 @@
-const { Medecin } = require("../../Models/Medecin");
+const { Doctor } = require("../../Models/Doctor");
 
 const EditeProfile = async (req, res) => {
     const userId = req.decoded.userId;
     const newData = req.body;
 
     try {
-        // Find the medecin by their ID
-        const user = await Medecin.findByPk(userId);
+        // Find the doctor by their ID
+        const user = await Doctor.findByPk(userId);
 
         if (!user) {
             return res.status(404).json({ message: "user not found." });

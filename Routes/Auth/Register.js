@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { Malad } = require("../../Models/Malad");
 const { Director } = require("../../Models/Director");
-const { Medecin } = require("../../Models/Medecin");
+const { Doctor } = require("../../Models/Doctor");
 const { Worker } = require("../../Models/Worker");
 const handleRegister = async (req, res) => {
     try {
@@ -35,7 +35,7 @@ const handleRegister = async (req, res) => {
         // if (!(await isemailValid(email))) {
         //     return res.status(409).json({ message: "Invalid email domain" });
         // }
-        const exist_medicin = await Medecin.findOne({
+        const exist_medicin = await Doctor.findOne({
             where: { email: email },
         });
         const exist_worker = await Worker.findOne({

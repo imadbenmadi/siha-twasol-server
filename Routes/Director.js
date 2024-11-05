@@ -73,30 +73,30 @@ router.post(
 );
 // _____________________________
 router.get(
-    "/:userId/:companyId/Doctores",
+    "/:userId/:companyId/Doctors",
     Director_Middlware,
-    DirectorController.Doctores_controller.get_All
+    DirectorController.Doctors_controller.get_All
 );
 router.get(
-    "/:userId/:companyId/Doctores/:doctorId",
+    "/:userId/:companyId/Doctors/:doctorId",
     Director_Middlware,
-    DirectorController.Doctores_controller.get_by_id
+    DirectorController.Doctors_controller.get_by_id
 );
 router.put(
-    "/:userId/:companyId/Doctores/:doctorId",
+    "/:userId/:companyId/Doctors/:doctorId",
     Director_Middlware,
-    DirectorController.Doctores_controller.edit_doctore
+    DirectorController.Doctors_controller.edit_doctor
 );
 router.delete(
-    "/:userId/:companyId/Doctores/:doctorId",
+    "/:userId/:companyId/Doctors/:doctorId",
     Director_Middlware,
-    DirectorController.Doctores_controller.delet_doctore
+    DirectorController.Doctors_controller.delet_doctor
 );
 
 router.post(
-    "/:userId/:companyId/Doctores",
+    "/:userId/:companyId/Doctors",
     Director_Middlware,
-    DirectorController.Doctores_controller.add_doctore
+    DirectorController.Doctors_controller.add_doctor
 );
 // _____________________________
 router.get(
@@ -133,8 +133,6 @@ router.delete(
     Director_Middlware,
     DirectorController.Events_controller.delete_event
 );
-
-
 
 // _____________________________
 // Formidable images

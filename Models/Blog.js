@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/db_connection");
 const { Company } = require("./Company");
-const { Medecin } = require("./Medecin");
+const { Doctor } = require("./Doctor");
 const { Worker } = require("./Worker");
 
 const Blog = sequelize.define("Blog", {
@@ -35,8 +35,8 @@ const Blog = sequelize.define("Blog", {
 Blog.belongsTo(Company, { foreignKey: "companyId" });
 Company.hasMany(Blog, { foreignKey: "companyId" });
 
-Blog.belongsTo(Medecin, { foreignKey: "ownerId" });
-Medecin.hasMany(Blog, { foreignKey: "ownerId" });
+Blog.belongsTo(Doctor, { foreignKey: "ownerId" });
+Doctor.hasMany(Blog, { foreignKey: "ownerId" });
 
 Blog.belongsTo(Worker, { foreignKey: "ownerId" });
 Worker.hasMany(Blog, { foreignKey: "ownerId" });

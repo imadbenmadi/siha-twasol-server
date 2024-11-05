@@ -1,6 +1,6 @@
 const { Director } = require("../../Models/Director");
 const { Worker } = require("../../Models/Worker");
-const { Medecin } = require("../../Models/Medecin");
+const { Doctor } = require("../../Models/Doctor");
 const { Malad } = require("../../Models/Malad");
 const { Service } = require("../../Models/Company");
 const { Company } = require("../../Models/Company");
@@ -8,7 +8,7 @@ const get_All = async (req, res) => {
     if (!req.params.companyId)
         return res.status(400).json({ message: "companyId is required." });
     try {
-        const users = await Medecin.findAll({
+        const users = await Doctor.findAll({
             include: [{ model: Company }, { model: Service }],
             where: { companyId: req.params.companyId },
         });
@@ -22,7 +22,7 @@ const get_by_id = async (req, res) => {
     if (!req.params.doctorId)
         return res.status(400).json({ message: "userId is required." });
     try {
-        const user = await Medecin.findByPk(req.params.doctorId, {
+        const user = await Doctor.findByPk(req.params.doctorId, {
             include: [{ model: Company }, { model: Service }],
             // attributes: { exclude: ["password"] },
         });
@@ -36,7 +36,7 @@ const get_by_id = async (req, res) => {
         return res.status(500).json({ message: error });
     }
 };
-const edit_doctore = async (req, res) => {
+const edit_doctor = async (req, res) => {
     const userId = req.params.doctorId;
     const newData = req.body;
     const email = newData.email;
@@ -46,13 +46,13 @@ const edit_doctore = async (req, res) => {
 
     try {
         // Find the user by their ID
-        const user = await Medecin.findByPk(userId);
+        const user = await Doctor.findByPk(userId);
 
         if (!user) {
             return res.status(404).json({ message: "user not found." });
         }
         if (user.email != email) {
-            const exist_medicin = await Medecin.findOne({
+            const exist_medicin = await Doctor.findOne({
                 where: { email: email },
             });
             const exist_worker = await Worker.findOne({
@@ -85,12 +85,12 @@ const edit_doctore = async (req, res) => {
         return res.status(500).json({ message: error });
     }
 };
-const delet_doctore = async (req, res) => {
+const delet_doctor = async (req, res) => {
     const userId = req.params.doctorId;
     if (!userId)
         return res.status(400).json({ message: "userId is required." });
     try {
-        const user = await Medecin.findByPk(userId);
+        const user = await Doctor.findByPk(userId);
         if (!user) {
             return res.status(404).json({ message: "user not found." });
         }
@@ -101,7 +101,7 @@ const delet_doctore = async (req, res) => {
         return res.status(500).json({ message: error });
     }
 };
-const add_doctore = async (req, res) => {
+const add_doctor = async (req, res) => {
     const {
         email,
         password,
@@ -147,8 +147,8 @@ const add_doctore = async (req, res) => {
     }
 
     try {
-        // Check if the email already exists in Medecin, Malad, or Director
-        const exist_medicin = await Medecin.findOne({ where: { email } });
+        // Check if the email already exists in Doctor, Malad, or Director
+        const exist_medicin = await Doctor.findOne({ where: { email } });
         const exist_malad = await Malad.findOne({ where: { email } });
         const exist_director = await Director.findOne({ where: { email } });
         const exist_worker = await Worker.findOne({ where: { email } });
@@ -159,8 +159,8 @@ const add_doctore = async (req, res) => {
             });
         }
 
-        // Create new Medecin (Doctor)
-        const user = await Medecin.create({
+        // Create new Doctor (Doctor)
+        const user = await Doctor.create({
             email,
             password,
             firstName,
@@ -196,8 +196,8 @@ const get_Services = async (req, res) => {
 module.exports = {
     get_All,
     get_by_id,
-    edit_doctore,
-    delet_doctore,
-    add_doctore,
+    edit_doctor,
+    delet_doctor,
+    add_doctor,
     get_Services,
 };

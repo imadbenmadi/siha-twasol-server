@@ -1,8 +1,8 @@
-const { Medecin } = require("../../Models/Medecin");
+const { Doctor } = require("../../Models/Doctor");
 const getProfile = async (req, res) => {
     const userId = req.decoded.userId;
     try {
-        const user = await Medecin.findByPk(userId, {
+        const user = await Doctor.findByPk(userId, {
             attributes: { exclude: ["password"] },
         });
 

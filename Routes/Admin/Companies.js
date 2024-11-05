@@ -4,7 +4,7 @@ const { Company } = require("../../Models/Company");
 const { Service } = require("../../Models/Company");
 const { Director } = require("../../Models/Director");
 const { Worker } = require("../../Models/Worker");
-const { Medecin } = require("../../Models/Medecin");
+const { Doctor } = require("../../Models/Doctor");
 const { malad_follow } = require("../../Models/Malad");
 const { Malad } = require("../../Models/Malad");
 const Admin_midllware = require("../../Middlewares/Admin_middleware");
@@ -32,7 +32,7 @@ router.get("/:id", Admin_midllware, async (req, res) => {
                 { model: Service, as: "Services" },
                 { model: Director, as: "Directors" },
                 { model: Worker, as: "Workers" },
-                { model: Medecin, as: "Medecins" },
+                { model: Doctor, as: "Doctors" },
                 { model: malad_follow, as: "malad_follows" },
             ],
         });
@@ -85,7 +85,7 @@ router.post("/", Admin_midllware, async (req, res) => {
         return res.status(409).json({ message: "Invalid email" });
     }
     try {
-        const exist_medicin = await Medecin.findOne({
+        const exist_medicin = await Doctor.findOne({
             where: { email: director_email },
         });
         const exist_worker = await Worker.findOne({

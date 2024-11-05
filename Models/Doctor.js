@@ -2,7 +2,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/db_connection");
 const { Company } = require("./Company");
 const { Service } = require("./Company");
-const Medecin = sequelize.define("Medecin", {
+const Doctor = sequelize.define("Doctor", {
     email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -40,22 +40,22 @@ const Medecin = sequelize.define("Medecin", {
         allowNull: true,
     },
 });
-const Medecin_Malads = sequelize.define("Medecin_Malads", {
+const Doctor_Malads = sequelize.define("Doctor_Malads", {
     maladId: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    medecinId: {
+    doctorId: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
 });
-Medecin.hasMany(Medecin_Malads, { foreignKey: "medecinId" });
-Medecin_Malads.belongsTo(Medecin, { foreignKey: "medecinId" });
+Doctor.hasMany(Doctor_Malads, { foreignKey: "doctorId" });
+Doctor_Malads.belongsTo(Doctor, { foreignKey: "doctorId" });
 
-Company.hasMany(Medecin, { foreignKey: "companyId", as: "Medecins" });
-Medecin.belongsTo(Company, { foreignKey: "companyId" });
+Company.hasMany(Doctor, { foreignKey: "companyId", as: "Doctors" });
+Doctor.belongsTo(Company, { foreignKey: "companyId" });
 
-Service.hasMany(Medecin, { foreignKey: "serviceId", as: "Medecins" });
-Medecin.belongsTo(Service, { foreignKey: "serviceId" });
-module.exports = { Medecin };
+Service.hasMany(Doctor, { foreignKey: "serviceId", as: "Doctors" });
+Doctor.belongsTo(Service, { foreignKey: "serviceId" });
+module.exports = { Doctor };

@@ -1,14 +1,14 @@
 const { Company, Service } = require("../../Models/Company");
 const { Blog } = require("../../Models/Blog");
 const { Event } = require("../../Models/Event");
-const { Medecin } = require("../../Models/Medecin");
+const { Doctor } = require("../../Models/Doctor");
 
 const get_All = async (req, res) => {
     try {
         const companies = await Company.findAll({
             include: [
                 { model: Service, as: "Services" },
-                { model: Medecin, as: "Medecins" },
+                { model: Doctor, as: "Doctors" },
             ],
         });
         res.status(200).json(companies);
@@ -34,8 +34,8 @@ const get_One = async (req, res) => {
                     as: "Events",
                 },
                 {
-                    model: Medecin,
-                    as: "Medecins",
+                    model: Doctor,
+                    as: "Doctors",
                 },
             ],
         });

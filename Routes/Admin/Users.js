@@ -3,7 +3,7 @@ const router = express.Router();
 const adminMiddleware = require("../../Middlewares/Admin_middleware");
 
 const { Malad } = require("../../Models/Malad");
-const { Medecin } = require("../../Models/Medecin");
+const { Doctor } = require("../../Models/Doctor");
 const { Worker } = require("../../Models/Worker");
 const { Malad_Rates, Medicin_Rates } = require("../../Models/Rates");
 router.get("/", adminMiddleware, async (req, res) => {
@@ -12,7 +12,7 @@ router.get("/", adminMiddleware, async (req, res) => {
             attributes: { exclude: ["password"] },
             order: [["createdAt", "DESC"]],
         });
-        const medicins = await Medecin.findAll({
+        const medicins = await Doctor.findAll({
             attributes: { exclude: ["password"] },
             order: [["createdAt", "DESC"]],
         });
@@ -28,7 +28,7 @@ router.get("/", adminMiddleware, async (req, res) => {
         }));
         const medicinUsers = medicins.map((medicin) => ({
             ...medicin.toJSON(),
-            userType: "medecin",
+            userType: "doctor",
         }));
         const workerUsers = workers.map((worker) => ({
             ...worker.toJSON(),
@@ -45,21 +45,21 @@ router.get("/", adminMiddleware, async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
-router.get("/Medecins/:id", adminMiddleware, async (req, res) => {
+router.get("/Doctors/:id", adminMiddleware, async (req, res) => {
     if (!req.params.id || req.params.id < 1 || isNaN(req.params.id)) {
         return res.status(400).json({ message: "invalide id" });
     }
-    const MedecinId = req.params.id;
+    const DoctorId = req.params.id;
     try {
-        const Medecin = await Medecin.findOne({
-            where: { id: MedecinId },
+        const Doctor = await Doctor.findOne({
+            where: { id: DoctorId },
             attributes: { exclude: ["password"] },
         });
-        if (!Medecin)
-            return res.status(404).json({ message: "Medecin not found" });
-        res.status(200).json({ user: Medecin });
+        if (!Doctor)
+            return res.status(404).json({ message: "Doctor not found" });
+        res.status(200).json({ user: Doctor });
     } catch (err) {
-        console.error("Error fetching Medecin:", err);
+        console.error("Error fetching Doctor:", err);
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
@@ -94,7 +94,7 @@ router.get("/Malads/:id/Feedbacks", adminMiddleware, async (req, res) => {
             },
             include: [
                 { model: Malad, as: "Malad" },
-                { model: Medecin, as: "Medecin" },
+                { model: Doctor, as: "Doctor" },
             ],
             order: [["createdAt", "DESC"]],
         });
@@ -106,7 +106,7 @@ router.get("/Malads/:id/Feedbacks", adminMiddleware, async (req, res) => {
         return res.status(500).json({ message: "Internal server error." });
     }
 });
-router.get("/Medecins/:id/Feedbacks", adminMiddleware, async (req, res) => {
+router.get("/Doctors/:id/Feedbacks", adminMiddleware, async (req, res) => {
     const userId = req.params.id;
     if (!req.params.id || req.params.id < 1 || isNaN(req.params.id)) {
         return res.status(400).json({ message: "invalide id" });
@@ -118,7 +118,7 @@ router.get("/Medecins/:id/Feedbacks", adminMiddleware, async (req, res) => {
             },
             include: [
                 { model: Malad, as: "Malad" },
-                { model: Medecin, as: "Medecin" },
+                { model: Doctor, as: "Doctor" },
             ],
             order: [["createdAt", "DESC"]],
         });
@@ -147,21 +147,21 @@ router.delete("/Malads/:id", adminMiddleware, async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
-router.delete("/Medecins/:id", adminMiddleware, async (req, res) => {
-    const MedecinId = req.params.id;
+router.delete("/Doctors/:id", adminMiddleware, async (req, res) => {
+    const DoctorId = req.params.id;
     if (!req.params.id || req.params.id < 1 || isNaN(req.params.id)) {
         return res.status(400).json({ message: "invalide id" });
     }
     try {
-        const Medecin = await Medecin.findOne({
-            where: { id: MedecinId },
+        const Doctor = await Doctor.findOne({
+            where: { id: DoctorId },
         });
-        if (!Medecin)
-            return res.status(404).json({ message: "Medecin not found" });
-        await Medecin.destroy({ where: { id: MedecinId } });
-        res.status(200).json({ message: "Medecin deleted successfully" });
+        if (!Doctor)
+            return res.status(404).json({ message: "Doctor not found" });
+        await Doctor.destroy({ where: { id: DoctorId } });
+        res.status(200).json({ message: "Doctor deleted successfully" });
     } catch (err) {
-        console.error("Error fetching deleting Medecin:", err);
+        console.error("Error fetching deleting Doctor:", err);
         res.status(500).json({ message: "Internal Server Error" });
     }
 });

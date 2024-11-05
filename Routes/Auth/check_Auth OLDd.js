@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { Director } = require("../../Models/Director");
 const { Malad } = require("../../Models/Malad");
-const { Medecin } = require("../../Models/Medecin");
+const { Doctor } = require("../../Models/Doctor");
 const { Worker } = require("../../Models/Worker");
 const { Refresh_tokens } = require("../../Models/RefreshTokens");
 
@@ -14,8 +14,8 @@ router.get("/", async (req, res) => {
         Director_REFRESH_TOKEN_SECRET,
         Malad_ACCESS_TOKEN_SECRET,
         Malad_REFRESH_TOKEN_SECRET,
-        Medecin_ACCESS_TOKEN_SECRET,
-        Medecin_REFRESH_TOKEN_SECRET,
+        Doctor_ACCESS_TOKEN_SECRET,
+        Doctor_REFRESH_TOKEN_SECRET,
         Worker_ACCESS_TOKEN_SECRET,
         Worker_REFRESH_TOKEN_SECRET,
     } = process.env;
@@ -110,8 +110,8 @@ router.get("/", async (req, res) => {
                         user = await Malad.findOne({
                             where: { id: decoded.userId },
                         });
-                    } else if (decoded.userType === "Medecin") {
-                        user = await Medecin.findOne({
+                    } else if (decoded.userType === "Doctor") {
+                        user = await Doctor.findOne({
                             where: { id: decoded.userId },
                         });
                     } else if (decoded.userType === "Worker") {
@@ -191,29 +191,29 @@ router.get("/", async (req, res) => {
             }
         }
 
-        // Check as Medecin
+        // Check as Doctor
         if (!user) {
             try {
                 decoded = await verifyToken(
                     accessToken,
-                    Medecin_ACCESS_TOKEN_SECRET
+                    Doctor_ACCESS_TOKEN_SECRET
                 );
-                user = await Medecin.findOne({ where: { id: decoded.userId } });
-                userType = "Medecin";
+                user = await Doctor.findOne({ where: { id: decoded.userId } });
+                userType = "Doctor";
             } catch (err) {
                 if (err.name === "TokenExpiredError" || !accessToken) {
                     try {
                         const result = await handleTokenExpired(
                             refreshToken,
-                            Medecin_REFRESH_TOKEN_SECRET,
-                            Medecin_ACCESS_TOKEN_SECRET
+                            Doctor_REFRESH_TOKEN_SECRET,
+                            Doctor_ACCESS_TOKEN_SECRET
                         );
                         return res.status(200).json({
                             message:
                                 "check auth true, Access token refreshed successfully",
                         });
                     } catch (err) {
-                        console.log("Error refreshing Medecin token:", err);
+                        console.log("Error refreshing Doctor token:", err);
                     }
                 }
             }

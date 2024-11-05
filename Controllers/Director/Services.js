@@ -1,6 +1,6 @@
 const { Director } = require("../../Models/Director");
 const { Service } = require("../../Models/Company");
-const { Medecin } = require("../../Models/Medecin");
+const { Doctor } = require("../../Models/Doctor");
 const { Malad } = require("../../Models/Malad");
 const { Company } = require("../../Models/Company");
 

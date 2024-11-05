@@ -55,7 +55,7 @@ app.use("/Admin_CheckAuth", require("./Routes/Auth/Admin/Admin_CheckAuth"));
 
 app.use("/Directors", require("./Routes/Director"));
 app.use("/Workers", require("./Routes/Worker"));
-app.use("/Medecins", require("./Routes/Medecin"));
+app.use("/Doctors", require("./Routes/Doctor"));
 app.use("/Malads", require("./Routes/Malad"));
 
 const { Event } = require("./Models/Event");
@@ -64,7 +64,7 @@ const { Blog } = require("./Models/Blog");
 const { Company } = require("./Models/Company");
 const { Contact_Messages } = require("./Models/Contact_Messages");
 const { Malad } = require("./Models/Malad");
-const { Medecin } = require("./Models/Medecin");
+const { Doctor } = require("./Models/Doctor");
 const { Messages } = require("./Models/Messages");
 const { Director } = require("./Models/Director");
 const { Rates } = require("./Models/Rates");

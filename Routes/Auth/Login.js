@@ -3,7 +3,7 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const { Malad } = require("../../Models/Malad");
 const { Director } = require("../../Models/Director");
-const { Medecin } = require("../../Models/Medecin");
+const { Doctor } = require("../../Models/Doctor");
 const { Worker } = require("../../Models/Worker");
 const { Refresh_tokens } = require("../../Models/RefreshTokens");
 
@@ -24,8 +24,8 @@ const handleLogin = async (req, res) => {
             userType = "Malad";
         }
         if (!user) {
-            user = await Medecin.findOne({ where: { email: email } });
-            userType = "Medecin";
+            user = await Doctor.findOne({ where: { email: email } });
+            userType = "Doctor";
         }
         if (!user) {
             user = await Worker.findOne({ where: { email: email } });
@@ -41,8 +41,8 @@ const handleLogin = async (req, res) => {
                     ? process.env.Director_ACCESS_TOKEN_SECRET
                     : userType == "Malad"
                     ? process.env.Malad_ACCESS_TOKEN_SECRET
-                    : userType == "Medecin"
-                    ? process.env.Medecin_ACCESS_TOKEN_SECRET
+                    : userType == "Doctor"
+                    ? process.env.Doctor_ACCESS_TOKEN_SECRET
                     : userType == "Worker"
                     ? process.env.Worker_ACCESS_TOKEN_SECRET
                     : null;
@@ -51,8 +51,8 @@ const handleLogin = async (req, res) => {
                     ? process.env.Director_REFRESH_TOKEN_SECRET
                     : userType == "Malad"
                     ? process.env.Malad_REFRESH_TOKEN_SECRET
-                    : userType == "Medecin"
-                    ? process.env.Medecin_REFRESH_TOKEN_SECRET
+                    : userType == "Doctor"
+                    ? process.env.Doctor_REFRESH_TOKEN_SECRET
                     : userType == "Worker"
                     ? process.env.Worker_REFRESH_TOKEN_SECRET
                     : null;

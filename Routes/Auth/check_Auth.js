@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { Director } = require("../../Models/Director");
 const { Malad } = require("../../Models/Malad");
-const { Medecin } = require("../../Models/Medecin");
+const { Doctor } = require("../../Models/Doctor");
 const { Worker } = require("../../Models/Worker");
 const { Refresh_tokens } = require("../../Models/RefreshTokens");
 
@@ -20,10 +20,10 @@ const userTypeMap = {
         accessSecret: process.env.Malad_ACCESS_TOKEN_SECRET,
         refreshSecret: process.env.Malad_REFRESH_TOKEN_SECRET,
     },
-    Medecin: {
-        model: Medecin,
-        accessSecret: process.env.Medecin_ACCESS_TOKEN_SECRET,
-        refreshSecret: process.env.Medecin_REFRESH_TOKEN_SECRET,
+    Doctor: {
+        model: Doctor,
+        accessSecret: process.env.Doctor_ACCESS_TOKEN_SECRET,
+        refreshSecret: process.env.Doctor_REFRESH_TOKEN_SECRET,
     },
     Worker: {
         model: Worker,
@@ -135,14 +135,12 @@ router.get("/", async (req, res) => {
                             refreshToken,
                             type
                         );
-                        return res
-                            .status(200)
-                            .json({
-                                message:
-                                    "check auth true, Access token refreshed successfully",
-                                userType: result.userType,
-                                userId: result.userId,
-                            });
+                        return res.status(200).json({
+                            message:
+                                "check auth true, Access token refreshed successfully",
+                            userType: result.userType,
+                            userId: result.userId,
+                        });
                     } catch (refreshErr) {
                         console.log(
                             `Error refreshing ${type} token:`,
