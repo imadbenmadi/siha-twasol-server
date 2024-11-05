@@ -1,4 +1,4 @@
-const { Company_Followers } = require("../../Models/Company_Followers");
+const { Company_Followers } = require("../../Models/Compnay_Followers");
 const { Op } = require("sequelize");
 const { Company } = require("../../Models/Company");
 const { Event } = require("../../Models/Event");
