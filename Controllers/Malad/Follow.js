@@ -74,3 +74,23 @@ exports.getFollowers = async (req, res) => {
         });
     }
 };
+
+exports.isFollowing = async (req, res) => {
+    const { userId, companyId } = req.params;
+
+    try {
+        // Check if a follow relationship exists between user and company
+        const follow = await Company_Followers.findOne({
+            where: { maladId: userId, companyId: companyId },
+        });
+
+        // Return true if following, false if not
+        res.status(200).json({ isFollowing: !!follow });
+    } catch (error) {
+        console.error("Error checking follow status:", error);
+        res.status(500).json({
+            message: "Failed to check follow status.",
+            error,
+        });
+    }
+};

@@ -19,8 +19,9 @@ router.get(
     Malad_Middlware,
     MaladController.Company_controller.get_One
 );
+
 // _____________________________
-router.post(
+http: router.post(
     "/:userId/Companies/:companyId/Follow",
     Malad_Middlware,
     MaladController.Follow_controller.followCompany
@@ -29,6 +30,11 @@ router.post(
     "/:userId/Companies/:companyId/Unfollow",
     Malad_Middlware,
     MaladController.Follow_controller.unfollowCompany
+);
+router.get(
+    "/:userId/Companies/:companyId/isFollowing",
+    Malad_Middlware,
+    MaladController.Follow_controller.isFollowing
 );
 
 router.get(
