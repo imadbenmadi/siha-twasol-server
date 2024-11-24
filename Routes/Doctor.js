@@ -9,7 +9,34 @@ router.get(
     Doctor_Middlware,
     DoctorController.profile_controller.getProfile
 );
+// _________________________________________________________________
+router.get(
+    "/:userId/:companyId/Blogs",
+    Doctor_Middlware,
+    DoctorController.Blogs_controller.get_All
+);
+router.get(
+    "/:userId/:companyId/Blogs/:blogId",
+    Doctor_Middlware,
+    DoctorController.Blogs_controller.get_by_id
+);
 
+router.delete(
+    "/:userId/:companyId/Blogs/:blogId",
+    Doctor_Middlware,
+    DoctorController.Blogs_controller.delete_blog
+);
+// _________________________________________________________________
+router.get(
+    "/:userId/:companyId/Events",
+    Doctor_Middlware,
+    DoctorController.Events_controller.get_All
+);
+router.get(
+    "/:userId/:companyId/Events/:eventId",
+    Doctor_Middlware,
+    DoctorController.Events_controller.get_by_id
+);
 // _____________________________
 // Formidable images
 const cookieParser = require("cookie-parser");
@@ -24,5 +51,52 @@ router.put(
     },
     Doctor_Middlware,
     DoctorController.profile_controller.EditeProfile
+);
+
+router.delete(
+    "/:userId/:companyId/Events/:eventId",
+    (req, res, next) => {
+        req.body = req.fields;
+        next();
+    },
+    Doctor_Middlware,
+    DoctorController.Events_controller.delete_event
+);
+
+router.post(
+    "/:userId/:companyId/Blogs",
+    (req, res, next) => {
+        req.body = req.fields;
+        next();
+    },
+    Doctor_Middlware,
+    DoctorController.Blogs_controller.add_blog
+);
+router.put(
+    "/:userId/:companyId/Blogs/:blogId",
+    (req, res, next) => {
+        req.body = req.fields;
+        next();
+    },
+    Doctor_Middlware,
+    DoctorController.Blogs_controller.edit_blog
+);
+router.post(
+    "/:userId/:companyId/Events",
+    (req, res, next) => {
+        req.body = req.fields;
+        next();
+    },
+    Doctor_Middlware,
+    DoctorController.Events_controller.add_event
+);
+router.put(
+    "/:userId/:companyId/Events/:eventId",
+    (req, res, next) => {
+        req.body = req.fields;
+        next();
+    },
+    Doctor_Middlware,
+    DoctorController.Events_controller.edit_event
 );
 module.exports = router;
