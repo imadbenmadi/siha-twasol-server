@@ -1,9 +1,7 @@
-const { getProfile } = require("./Doctor/getProfile");
-const { EditeProfile } = require("./Doctor/EditeProfile");
+const profile_controller = require("./Doctor/Profile");
 
 const MaladController = {
-    getProfile,
-    EditeProfile,
+    profile_controller,
 };
 
 module.exports = MaladController;
