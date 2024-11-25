@@ -2,6 +2,7 @@ const { Malad } = require("../../../Models/Malad");
 const { Company } = require("../../../Models/Company");
 const { Doctor } = require("../../../Models/Doctor");
 const { Doctor_Malads } = require("../../../Models/Doctor");
+const { Malad_Rates } = require("../../../Models/Rates");
 const Sequelize = require("sequelize");
 // Get all malads
 const get_All = async (req, res) => {
@@ -42,7 +43,24 @@ const get_by_id = async (req, res) => {
         const is_in_list = await Doctor_Malads.findOne({
             where: { doctorId: req.params.userId, maladId },
         });
-        return res.status(200).json({ malad, is_in_list });
+        const maladrates = await Malad_Rates.findAll(
+            {
+                where: { maladId },
+            },
+            {
+                include: [
+                    {
+                        model: Doctor,
+                        exclude: ["password"],
+                    },
+                    {
+                        model: Malad,
+                        exclude: ["password"],
+                    },
+                ],
+            }
+        );
+        return res.status(200).json({ malad, is_in_list, maladrates });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Internal server error." });
