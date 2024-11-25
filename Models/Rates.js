@@ -11,7 +11,7 @@ const Malad_Rates = sequelize.define("Malad_Rates", {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    rate: {
+    Rate: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
@@ -29,7 +29,7 @@ const Doctor_Rates = sequelize.define("Doctor_Rates", {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    rate: {
+    Rate: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },

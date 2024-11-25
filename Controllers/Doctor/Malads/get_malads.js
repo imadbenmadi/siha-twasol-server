@@ -43,23 +43,19 @@ const get_by_id = async (req, res) => {
         const is_in_list = await Doctor_Malads.findOne({
             where: { doctorId: req.params.userId, maladId },
         });
-        const maladrates = await Malad_Rates.findAll(
-            {
-                where: { maladId },
-            },
-            {
-                include: [
-                    {
-                        model: Doctor,
-                        exclude: ["password"],
-                    },
-                    {
-                        model: Malad,
-                        exclude: ["password"],
-                    },
-                ],
-            }
-        );
+        const maladrates = await Malad_Rates.findAll({
+            where: { maladId },
+            include: [
+                {
+                    model: Doctor,
+                    attributes: { exclude: ["password"] }, // Exclude sensitive fields
+                },
+                {
+                    model: Malad,
+                    attributes: { exclude: ["password"] }, // Exclude sensitive fields
+                },
+            ],
+        });
         return res.status(200).json({ malad, is_in_list, maladrates });
     } catch (error) {
         console.error(error);
@@ -108,23 +104,19 @@ const get_own_malad_by_id = async (req, res) => {
         const is_rated = await Malad_Rates.findOne({
             where: { doctorId: req.params.userId, maladId },
         });
-        const maladrates = await Malad_Rates.findAll(
-            {
-                where: { maladId },
-            },
-            {
-                include: [
-                    {
-                        model: Doctor,
-                        exclude: ["password"],
-                    },
-                    {
-                        model: Malad,
-                        exclude: ["password"],
-                    },
-                ],
-            }
-        );
+        const maladrates = await Malad_Rates.findAll({
+            where: { maladId },
+            include: [
+                {
+                    model: Doctor,
+                    attributes: { exclude: ["password"] }, // Exclude sensitive fields
+                },
+                {
+                    model: Malad,
+                    attributes: { exclude: ["password"] }, // Exclude sensitive fields
+                },
+            ],
+        });
         return res.status(200).json({ malad, is_rated, maladrates });
     } catch (error) {
         console.error(error);

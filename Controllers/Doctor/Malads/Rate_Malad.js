@@ -31,7 +31,7 @@ const rate_malad = async (req, res) => {
         await Malad_Rates.create({
             maladId,
             doctorId: req.decoded.userId,
-            rate: rating,
+            Rate: rating,
             review,
         });
         return res.status(200).json({ message: "Rating added successfully." });
