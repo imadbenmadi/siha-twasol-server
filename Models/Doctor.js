@@ -2,6 +2,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/db_connection");
 const { Company } = require("./Company");
 const { Service } = require("./Company");
+const { Malad } = require("./Malad");
 const Doctor = sequelize.define("Doctor", {
     email: {
         type: DataTypes.STRING,
@@ -52,6 +53,8 @@ const Doctor_Malads = sequelize.define("Doctor_Malads", {
 });
 Doctor.hasMany(Doctor_Malads, { foreignKey: "doctorId" });
 Doctor_Malads.belongsTo(Doctor, { foreignKey: "doctorId" });
+Malad.hasMany(Doctor_Malads, { foreignKey: "maladId" });
+Doctor_Malads.belongsTo(Malad, { foreignKey: "maladId" });
 
 Company.hasMany(Doctor, { foreignKey: "companyId", as: "Doctors" });
 Doctor.belongsTo(Company, { foreignKey: "companyId" });

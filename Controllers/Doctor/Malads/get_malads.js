@@ -70,6 +70,14 @@ const get_own_malads = async (req, res) => {
     try {
         const malads = await Doctor_Malads.findAll({
             where: { doctorId: req.params.userId },
+            include: [
+                {
+                    model: Malad,
+                },
+                // {
+                //     model: Doctor,
+                // },
+            ],
         });
         console.log(malads);
 
