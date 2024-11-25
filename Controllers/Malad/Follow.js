@@ -18,7 +18,7 @@ exports.followCompany = async (req, res) => {
 
         // Create the follow relationship
         await Company_Followers.create({ maladId: userId, companyId });
-        res.status(201).json({ message: "Successfully followed the company." });
+        res.status(200).json({ message: "Successfully followed the company." });
     } catch (error) {
         console.error("Failed to follow the company:", error);
         res.status(500).json({

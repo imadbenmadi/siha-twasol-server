@@ -25,7 +25,7 @@ const add_malads_to_list = async (req, res) => {
         }
 
         await Doctor_Malads.create({ maladId, doctorId: userId });
-        return res.status(201).json({ message: "Malad added successfully." });
+        return res.status(200).json({ message: "Malad added successfully." });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Internal server error." });

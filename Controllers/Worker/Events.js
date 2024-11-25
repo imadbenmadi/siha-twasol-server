@@ -219,7 +219,7 @@ const add_event = async (req, res) => {
             companyId,
             image_link: image ? `/Event_Pics/${uniqueSuffix}` : null,
         });
-        return res.status(201).json({ event });
+        return res.status(200).json({ event });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Internal server error." });

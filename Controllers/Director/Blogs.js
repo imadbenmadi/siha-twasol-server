@@ -221,7 +221,7 @@ const add_blog = async (req, res) => {
             companyId,
             image_link: image ? `/Blog_Pics/${uniqueSuffix}` : null,
         });
-        return res.status(201).json({ blog });
+        return res.status(200).json({ blog });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Internal server error." });
