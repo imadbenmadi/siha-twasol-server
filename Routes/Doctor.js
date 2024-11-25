@@ -42,6 +42,11 @@ router.get(
     Doctor_Middlware,
     DoctorController.MaladsController.get_own_malad
 );
+router.get(
+    "/:userId/Malads/Own/:maladId",
+    Doctor_Middlware,
+    DoctorController.MaladsController.get_own_malad_by_id
+);
 router.post(
     "/:userId/Malads/:maladId/Add",
     Doctor_Middlware,
