@@ -64,6 +64,7 @@ router.post(
     Doctor_Middlware,
     DoctorController.MaladsController.rate_malad
 );
+
 // _________________________________________________________________
 router.get(
     "/:userId/:companyId/Events",

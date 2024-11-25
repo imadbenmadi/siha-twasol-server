@@ -19,9 +19,14 @@ router.get(
     Malad_Middlware,
     MaladController.Company_controller.get_One
 );
+router.get(
+    "/:userId/Companies/:companyId/Doctors/:doctorId",
+    Malad_Middlware,
+    MaladController.Doctor_Controller.get_Doctor
+);
 
 // _____________________________
-http: router.post(
+router.post(
     "/:userId/Companies/:companyId/Follow",
     Malad_Middlware,
     MaladController.Follow_controller.followCompany
@@ -56,6 +61,11 @@ router.get(
     "/:userId/Events/:eventId",
     Malad_Middlware,
     MaladController.Event_controller.get_event
+);
+router.post(
+    "/:userId/Doctors/:doctorId/Rate",
+    Malad_Middlware,
+    MaladController.RateController.rate_Doctor
 );
 
 // _____________________________

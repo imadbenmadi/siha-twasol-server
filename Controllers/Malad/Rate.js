@@ -1,18 +1,17 @@
-const { Malad } = require("../../../Models/Malad");
-const { Company } = require("../../../Models/Company");
-const { Doctor } = require("../../../Models/Doctor");
-const { Doctor_Malads } = require("../../../Models/Doctor");
-const { Malad_Rates, Doctor_Rates } = require("../../../Models/Rates");
-const rate_malad = async (req, res) => {
-    const { maladId } = req.params;
+const { Malad } = require("../../Models/Malad");
+const { Company } = require("../../Models/Company");
+const { Doctor } = require("../../Models/Doctor");
+const { Doctor_Malads } = require("../../Models/Doctor");
+const { Malad_Rates, Doctor_Rates } = require("../../Models/Rates");
+const rate_Doctor = async (req, res) => {
+    const { doctorId } = req.params;
     const { rating, review } = req.body;
-
-    if (!maladId || !rating) {
+    if (!doctorId || !rating) {
         return res.status(400).json({ message: "Missing required fields." });
     }
 
     try {
-        const malad = await Malad.findByPk(maladId);
+        const malad = await Malad.findByPk(doctorId);
         if (!malad) {
             return res.status(404).json({ message: "Malad not found." });
         }
@@ -21,8 +20,8 @@ const rate_malad = async (req, res) => {
             return res.status(404).json({ message: "User not found." });
         }
 
-        const alreadyRated = await Malad_Rates.findOne({
-            where: { maladId, doctorId: req.decoded.userId },
+        const alreadyRated = await Doctor_Rates.findOne({
+            where: { maladId: req.decoded.userId, doctorId },
         });
 
         if (alreadyRated) {
@@ -30,8 +29,8 @@ const rate_malad = async (req, res) => {
         }
         const is_in_List = await Doctor_Malads.findOne({
             where: {
-                doctorId: req.decoded.userId,
-                maladId,
+                doctorId,
+                maladId: req.decoded.userId,
             },
         });
         if (!is_in_List) {
@@ -39,9 +38,9 @@ const rate_malad = async (req, res) => {
                 .status(400)
                 .json({ message: "You are not in the list." });
         }
-        await Malad_Rates.create({
-            maladId,
-            doctorId: req.decoded.userId,
+        await Doctor_Rates.create({
+            maladId: req.decoded.userId,
+            doctorId,
             Rate: rating,
             review,
         });
@@ -52,5 +51,5 @@ const rate_malad = async (req, res) => {
     }
 };
 module.exports = {
-    rate_malad,
+    rate_Doctor,
 };
