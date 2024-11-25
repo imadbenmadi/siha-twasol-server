@@ -33,8 +33,8 @@ const add_malads_to_list = async (req, res) => {
 };
 const remove_malad_from_list = async (req, res) => {
     const { maladId } = req.params;
-    const { userId, companyId } = req.body;
-    if (!maladId || !userId || !companyId) {
+    const { userId } = req.body;
+    if (!maladId || !userId) {
         return res.status(400).json({ message: "Missing required fields." });
     }
     try {
@@ -42,11 +42,8 @@ const remove_malad_from_list = async (req, res) => {
         if (!malad) {
             return res.status(404).json({ message: "Malad not found." });
         }
-        const company = await Company.findByPk(companyId);
-        if (!company) {
-            return res.status(404).json({ message: "Company not found." });
-        }
-        const user = await User.findByPk(userId);
+
+        const user = await Doctor.findByPk(userId);
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }

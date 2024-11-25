@@ -14,7 +14,7 @@ const rate_malad = async (req, res) => {
         if (!malad) {
             return res.status(404).json({ message: "Malad not found." });
         }
-        const user = await User.findByPk(userId);
+        const user = await Doctor.findByPk(userId);
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }

@@ -2,11 +2,10 @@ const { Malad } = require("../../../Models/Malad");
 const { Company } = require("../../../Models/Company");
 const { Doctor } = require("../../../Models/Doctor");
 const { Doctor_Malads } = require("../../../Models/Doctor");
+const Sequelize = require("sequelize");
 // Get all malads
 const get_All = async (req, res) => {
-    if (!req.params.companyId) {
-        return res.status(400).json({ message: "companyId is required." });
-    }
+    
     try {
         const ownedMaladIds = await Doctor_Malads.findAll({
             where: { doctorId: req.params.userId },

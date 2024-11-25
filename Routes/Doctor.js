@@ -26,34 +26,34 @@ router.delete(
     Doctor_Middlware,
     DoctorController.Blogs_controller.delete_blog
 );
-
+// _________________________________________________________________
 router.get(
-    "/:userId/:companyId/Malads",
+    "/:userId/Malads",
     Doctor_Middlware,
     DoctorController.MaladsController.get_All
 );
 router.get(
-    "/:userId/:companyId/Malads/:maladId",
+    "/:userId/Malads/:maladId",
     Doctor_Middlware,
     DoctorController.MaladsController.get_by_id
 );
 router.get(
-    "/:userId/:companyId/Malads/Own",
+    "/:userId/Malads/Own",
     Doctor_Middlware,
     DoctorController.MaladsController.get_own_malad
 );
 router.post(
-    "/:userId/:companyId/Malads/:maladId/Add",
+    "/:userId/Malads/:maladId/Add",
     Doctor_Middlware,
     DoctorController.MaladsController.add_malads_to_list
 );
 router.delete(
-    "/:userId/:companyId/Malads/:maladId/Remove",
+    "/:userId/Malads/:maladId/Remove",
     Doctor_Middlware,
     DoctorController.MaladsController.remove_malad_from_list
 );
 router.post(
-    "/:userId/:companyId/Malads/:maladId/rate",
+    "/:userId/Malads/:maladId/rate",
     Doctor_Middlware,
     DoctorController.MaladsController.rate_malad
 );
