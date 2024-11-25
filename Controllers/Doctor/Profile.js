@@ -1,6 +1,7 @@
 const { Doctor } = require("../../Models/Doctor");
 const fs = require("fs");
 const path = require("path");
+const { Company } = require("../../Models/Company");
 
 const EditeProfile = async (req, res) => {
     const userId = req.decoded.userId;
@@ -86,7 +87,9 @@ const getProfile = async (req, res) => {
     try {
         const user = await Doctor.findByPk(userId, {
             attributes: { exclude: ["password"] },
+            include: [{ model: Company, as: "Company" }],
         });
+        // console.log(user);
 
         if (!user) {
             return res.status(404).json({ message: "user not found." });
