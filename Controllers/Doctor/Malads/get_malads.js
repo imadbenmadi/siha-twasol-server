@@ -39,14 +39,16 @@ const get_by_id = async (req, res) => {
         if (!malad) {
             return res.status(404).json({ message: "Malad not found." });
         }
-        return res.status(200).json({ malad });
+        const is_in_list = await Doctor_Malads.findOne({
+            where: { doctorId: req.params.userId, maladId },
+        });
+        return res.status(200).json({ malad, is_in_list });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Internal server error." });
     }
 };
 const get_own_malads = async (req, res) => {
-    
     try {
         const malads = await Doctor_Malads.findAll({
             where: { doctorId: req.params.userId },
