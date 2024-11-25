@@ -46,11 +46,12 @@ const get_by_id = async (req, res) => {
     }
 };
 const get_own_malads = async (req, res) => {
+    
     try {
         const malads = await Doctor_Malads.findAll({
             where: { doctorId: req.params.userId },
-            include: [{ model: Company }],
         });
+        console.log(malads);
 
         return res.status(200).json({ malads });
     } catch (error) {

@@ -33,11 +33,6 @@ router.get(
     DoctorController.MaladsController.get_All
 );
 router.get(
-    "/:userId/Malads/:maladId",
-    Doctor_Middlware,
-    DoctorController.MaladsController.get_by_id
-);
-router.get(
     "/:userId/Malads/Own",
     Doctor_Middlware,
     DoctorController.MaladsController.get_own_malads
@@ -47,6 +42,13 @@ router.get(
     Doctor_Middlware,
     DoctorController.MaladsController.get_own_malad_by_id
 );
+router.get(
+    "/:userId/Malads/:maladId",
+    Doctor_Middlware,
+    DoctorController.MaladsController.get_by_id
+);
+
+
 router.post(
     "/:userId/Malads/:maladId/Add",
     Doctor_Middlware,
