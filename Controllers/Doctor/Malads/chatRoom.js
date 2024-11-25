@@ -1,3 +1,8 @@
+const { Malad } = require("../../../Models/Malad");
+const { Company } = require("../../../Models/Company");
+const { Doctor } = require("../../../Models/Doctor");
+const { Doctor_Malads } = require("../../../Models/Doctor");
+
 const openChatRoom = async (req, res) => {
     const { maladId } = req.params;
     if (!maladId) {

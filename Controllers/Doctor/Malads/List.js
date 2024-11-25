@@ -1,7 +1,7 @@
-const { Malad } = require("../../Models/Malad");
-const { Company } = require("../../Models/Company");
-const { Doctor } = require("../../Models/Doctor");
-const { Doctor_Malads } = require("../../Models/Doctor");
+const { Malad } = require("../../../Models/Malad");
+const { Company } = require("../../../Models/Company");
+const { Doctor } = require("../../../Models/Doctor");
+const { Doctor_Malads } = require("../../../Models/Doctor");
 const add_malads_to_list = async (req, res) => {
     const { maladId, userId } = req.params;
     if (!maladId || !userId) {

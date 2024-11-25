@@ -45,7 +45,7 @@ router.get(
 router.post(
     "/:userId/:companyId/Malads/:maladId/Add",
     Doctor_Middlware,
-    DoctorController.MaladsController.add_malad_to_list
+    DoctorController.MaladsController.add_malads_to_list
 );
 router.delete(
     "/:userId/:companyId/Malads/:maladId/Remove",

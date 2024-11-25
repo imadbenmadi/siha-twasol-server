@@ -1,7 +1,7 @@
-const { Malad } = require("../../Models/Malad");
-const { Company } = require("../../Models/Company");
-const { Doctor } = require("../../Models/Doctor");
-const { Doctor_Malads } = require("../../Models/Doctor");
+const { Malad } = require("../../../Models/Malad");
+const { Company } = require("../../../Models/Company");
+const { Doctor } = require("../../../Models/Doctor");
+const { Doctor_Malads } = require("../../../Models/Doctor");
 // Get all malads
 const get_All = async (req, res) => {
     if (!req.params.companyId) {
