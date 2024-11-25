@@ -96,6 +96,11 @@ const get_own_malad_by_id = async (req, res) => {
     try {
         const malad = await Doctor_Malads.findOne({
             where: { doctorId: req.params.userId, maladId },
+            include: [
+                {
+                    model: Malad,
+                },
+            ],
         });
         if (!malad) {
             return res.status(404).json({ message: "Malad not found." });
