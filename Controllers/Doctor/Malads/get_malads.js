@@ -108,8 +108,24 @@ const get_own_malad_by_id = async (req, res) => {
         const is_rated = await Malad_Rates.findOne({
             where: { doctorId: req.params.userId, maladId },
         });
-
-        return res.status(200).json({ malad, is_rated });
+        const maladrates = await Malad_Rates.findAll(
+            {
+                where: { maladId },
+            },
+            {
+                include: [
+                    {
+                        model: Doctor,
+                        exclude: ["password"],
+                    },
+                    {
+                        model: Malad,
+                        exclude: ["password"],
+                    },
+                ],
+            }
+        );
+        return res.status(200).json({ malad, is_rated, maladrates });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Internal server error." });
