@@ -58,4 +58,4 @@ Doctor.belongsTo(Company, { foreignKey: "companyId" });
 
 Service.hasMany(Doctor, { foreignKey: "serviceId", as: "Doctors" });
 Doctor.belongsTo(Service, { foreignKey: "serviceId" });
-module.exports = { Doctor };
+module.exports = { Doctor, Doctor_Malads };
