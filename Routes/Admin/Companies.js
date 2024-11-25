@@ -85,7 +85,7 @@ router.post("/", Admin_midllware, async (req, res) => {
         return res.status(409).json({ message: "Invalid email" });
     }
     try {
-        const exist_medicin = await Doctor.findOne({
+        const exist_doctor = await Doctor.findOne({
             where: { email: director_email },
         });
         const exist_worker = await Worker.findOne({
@@ -98,7 +98,7 @@ router.post("/", Admin_midllware, async (req, res) => {
             where: { email: director_email },
         });
 
-        if (exist_malad || exist_medicin || exist_worker || exist_director) {
+        if (exist_malad || exist_doctor || exist_worker || exist_director) {
             return res.status(400).json({
                 message: "email already exists , please use another email.",
             });

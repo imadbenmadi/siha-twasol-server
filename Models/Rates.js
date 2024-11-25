@@ -7,7 +7,7 @@ const Malad_Rates = sequelize.define("Malad_Rates", {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    medicinId: {
+    doctorId: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
@@ -16,12 +16,12 @@ const Malad_Rates = sequelize.define("Malad_Rates", {
         allowNull: false,
     },
 });
-const Medicin_Rates = sequelize.define("Medicin_Rates", {
+const Doctor_Rates = sequelize.define("Doctor_Rates", {
     maladId: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    medicinId: {
+    doctorId: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
@@ -31,13 +31,13 @@ const Medicin_Rates = sequelize.define("Medicin_Rates", {
     },
 });
 Malad.hasMany(Malad_Rates, { foreignKey: "maladId" });
-Doctor.hasMany(Medicin_Rates, { foreignKey: "medicinId" });
-Malad.hasMany(Medicin_Rates, { foreignKey: "maladId" });
-Doctor.hasMany(Malad_Rates, { foreignKey: "medicinId" });
+Doctor.hasMany(Doctor_Rates, { foreignKey: "doctorId" });
+Malad.hasMany(Doctor_Rates, { foreignKey: "maladId" });
+Doctor.hasMany(Malad_Rates, { foreignKey: "doctorId" });
 
 Malad_Rates.belongsTo(Malad, { foreignKey: "maladId" });
-Malad_Rates.belongsTo(Doctor, { foreignKey: "medicinId" });
-Medicin_Rates.belongsTo(Malad, { foreignKey: "maladId" });
-Medicin_Rates.belongsTo(Doctor, { foreignKey: "medicinId" });
+Malad_Rates.belongsTo(Doctor, { foreignKey: "doctorId" });
+Doctor_Rates.belongsTo(Malad, { foreignKey: "maladId" });
+Doctor_Rates.belongsTo(Doctor, { foreignKey: "doctorId" });
 
-module.exports = { Malad_Rates, Medicin_Rates };
+module.exports = { Malad_Rates, Doctor_Rates };

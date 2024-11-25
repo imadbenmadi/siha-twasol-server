@@ -2,6 +2,7 @@ const { Malad } = require("../../Models/Malad");
 const { Company } = require("../../Models/Company");
 const { Doctor } = require("../../Models/Doctor");
 const { Doctor_Malads } = require("../../Models/Doctor");
+const { Malad_Rates, Doctor_Rates } = require("../../Models/Rates");
 const rate_malad = async (req, res) => {
     const { maladId } = req.params;
     const { userId, rating } = req.body;
@@ -17,7 +18,13 @@ const rate_malad = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
-        await malad.addRating(user, { through: { rating } });
+        const alreadyRated = await Doctor_Malads.findOne({
+            where: { maladId, doctorId: userId },
+        });
+        if (alreadyRated) {
+            return res.status(400).json({ message: "Malad already rated." });
+        }
+        // await Doctor_Rates_to_Malads.create({ maladId, doctorId: userId, rating });
         return res.status(200).json({ message: "Rating added successfully." });
     } catch (error) {
         console.error(error);

@@ -50,7 +50,12 @@ const remove_malad_from_list = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
-        await malad.removeUser(user);
+        // close chatroom and delete messages
+        // delete files
+        await Doctor_Malads.destroy({
+            where: { maladId, doctorId: userId },
+        });
+
         return res.status(200).json({ message: "Malad removed successfully." });
     } catch (error) {
         console.error(error);

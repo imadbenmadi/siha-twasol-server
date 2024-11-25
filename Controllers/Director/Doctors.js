@@ -52,7 +52,7 @@ const edit_doctor = async (req, res) => {
             return res.status(404).json({ message: "user not found." });
         }
         if (user.email != email) {
-            const exist_medicin = await Doctor.findOne({
+            const exist_doctor = await Doctor.findOne({
                 where: { email: email },
             });
             const exist_worker = await Worker.findOne({
@@ -64,12 +64,7 @@ const edit_doctor = async (req, res) => {
             const exist_director = await Director.findOne({
                 where: { email: email },
             });
-            if (
-                exist_malad ||
-                exist_medicin ||
-                exist_director ||
-                exist_worker
-            ) {
+            if (exist_malad || exist_doctor || exist_director || exist_worker) {
                 return res.status(400).json({
                     message: "email already exists , please use another email.",
                 });
@@ -148,12 +143,12 @@ const add_doctor = async (req, res) => {
 
     try {
         // Check if the email already exists in Doctor, Malad, or Director
-        const exist_medicin = await Doctor.findOne({ where: { email } });
+        const exist_doctor = await Doctor.findOne({ where: { email } });
         const exist_malad = await Malad.findOne({ where: { email } });
         const exist_director = await Director.findOne({ where: { email } });
         const exist_worker = await Worker.findOne({ where: { email } });
 
-        if (exist_medicin || exist_malad || exist_director || exist_worker) {
+        if (exist_doctor || exist_malad || exist_director || exist_worker) {
             return res.status(400).json({
                 message: "Email already exists, please use another email.",
             });

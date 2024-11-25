@@ -35,7 +35,7 @@ const handleRegister = async (req, res) => {
         // if (!(await isemailValid(email))) {
         //     return res.status(409).json({ message: "Invalid email domain" });
         // }
-        const exist_medicin = await Doctor.findOne({
+        const exist_doctor = await Doctor.findOne({
             where: { email: email },
         });
         const exist_worker = await Worker.findOne({
@@ -47,7 +47,7 @@ const handleRegister = async (req, res) => {
         const exist_director = await Director.findOne({
             where: { email: email },
         });
-        if (exist_malad || exist_medicin || exist_director || exist_worker) {
+        if (exist_malad || exist_doctor || exist_director || exist_worker) {
             return res.status(400).json({
                 message: "email already exists , please use another email.",
             });

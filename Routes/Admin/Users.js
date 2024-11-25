@@ -5,14 +5,14 @@ const adminMiddleware = require("../../Middlewares/Admin_middleware");
 const { Malad } = require("../../Models/Malad");
 const { Doctor } = require("../../Models/Doctor");
 const { Worker } = require("../../Models/Worker");
-const { Malad_Rates, Medicin_Rates } = require("../../Models/Rates");
+const { Malad_Rates, Doctor_Rates } = require("../../Models/Rates");
 router.get("/", adminMiddleware, async (req, res) => {
     try {
         const malads = await Malad.findAll({
             attributes: { exclude: ["password"] },
             order: [["createdAt", "DESC"]],
         });
-        const medicins = await Doctor.findAll({
+        const doctors = await Doctor.findAll({
             attributes: { exclude: ["password"] },
             order: [["createdAt", "DESC"]],
         });
@@ -26,15 +26,15 @@ router.get("/", adminMiddleware, async (req, res) => {
             ...malad.toJSON(),
             userType: "malad",
         }));
-        const medicinUsers = medicins.map((medicin) => ({
-            ...medicin.toJSON(),
+        const doctorUsers = doctors.map((doctor) => ({
+            ...doctor.toJSON(),
             userType: "doctor",
         }));
         const workerUsers = workers.map((worker) => ({
             ...worker.toJSON(),
             userType: "worker",
         }));
-        const users = [...maladUsers, ...medicinUsers, ...workerUsers];
+        const users = [...maladUsers, ...doctorUsers, ...workerUsers];
 
         users.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
@@ -88,7 +88,7 @@ router.get("/Malads/:id/Feedbacks", adminMiddleware, async (req, res) => {
         return res.status(400).json({ message: "invalide id" });
     }
     try {
-        const Feedbacks = await Medicin_Rates.findAll({
+        const Feedbacks = await Doctor_Rates.findAll({
             where: {
                 maladId: userId,
             },
@@ -114,7 +114,7 @@ router.get("/Doctors/:id/Feedbacks", adminMiddleware, async (req, res) => {
     try {
         const Feedbacks = await Malad_Rates.findAll({
             where: {
-                medicinId: userId,
+                doctorId: userId,
             },
             include: [
                 { model: Malad, as: "Malad" },
