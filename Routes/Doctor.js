@@ -40,7 +40,7 @@ router.get(
 router.get(
     "/:userId/Malads/Own",
     Doctor_Middlware,
-    DoctorController.MaladsController.get_own_malad
+    DoctorController.MaladsController.get_own_malads
 );
 router.get(
     "/:userId/Malads/Own/:maladId",

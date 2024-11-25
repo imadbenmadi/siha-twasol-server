@@ -45,9 +45,9 @@ const get_by_id = async (req, res) => {
         return res.status(500).json({ message: "Internal server error." });
     }
 };
-const get_own_malad = async (req, res) => {
+const get_own_malads = async (req, res) => {
     try {
-        const malads = await Doctor_Malads.findOne({
+        const malads = await Doctor_Malads.findAll({
             where: { doctorId: req.params.userId },
             include: [{ model: Company }],
         });
@@ -80,6 +80,6 @@ const get_own_malad_by_id = async (req, res) => {
 module.exports = {
     get_All,
     get_by_id,
-    get_own_malad,
+    get_own_malads,
     get_own_malad_by_id,
 };

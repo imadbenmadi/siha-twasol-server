@@ -46,7 +46,7 @@ const verifyToken = (token, secret) => {
 };
 
 // Function to handle expired access tokens
-const handleTokenExpired = async (refreshToken, userType) => {
+const handleTokenExpired = async (res, refreshToken, userType) => {
     const userSecrets = userTypeMap[userType];
     const found_in_DB = await Refresh_tokens.findOne({
         where: { token: refreshToken, userType },
@@ -132,6 +132,7 @@ router.get("/", async (req, res) => {
                 if (err.name === "TokenExpiredError") {
                     try {
                         const result = await handleTokenExpired(
+                            res,
                             refreshToken,
                             type
                         );
