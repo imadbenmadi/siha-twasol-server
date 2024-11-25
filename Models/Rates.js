@@ -15,6 +15,10 @@ const Malad_Rates = sequelize.define("Malad_Rates", {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    review: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
 });
 const Doctor_Rates = sequelize.define("Doctor_Rates", {
     maladId: {
@@ -28,6 +32,10 @@ const Doctor_Rates = sequelize.define("Doctor_Rates", {
     rate: {
         type: DataTypes.INTEGER,
         allowNull: false,
+    },
+    review: {
+        type: DataTypes.STRING,
+        allowNull: true,
     },
 });
 Malad.hasMany(Malad_Rates, { foreignKey: "maladId" });

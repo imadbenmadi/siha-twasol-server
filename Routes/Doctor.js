@@ -60,7 +60,7 @@ router.delete(
     DoctorController.MaladsController.remove_malad_from_list
 );
 router.post(
-    "/:userId/Malads/:maladId/rate",
+    "/:userId/Malads/:maladId/Rate",
     Doctor_Middlware,
     DoctorController.MaladsController.rate_malad
 );

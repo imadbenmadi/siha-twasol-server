@@ -4,27 +4,36 @@ const { Doctor } = require("../../../Models/Doctor");
 const { Doctor_Malads } = require("../../../Models/Doctor");
 const { Malad_Rates, Doctor_Rates } = require("../../../Models/Rates");
 const rate_malad = async (req, res) => {
+    console.log("good till here");
+
     const { maladId } = req.params;
-    const { userId, rating } = req.body;
-    if (!maladId || !userId || !rating) {
+    const { rating, review } = req.body;
+    if (!maladId || !rating) {
         return res.status(400).json({ message: "Missing required fields." });
     }
+
     try {
         const malad = await Malad.findByPk(maladId);
         if (!malad) {
             return res.status(404).json({ message: "Malad not found." });
         }
-        const user = await Doctor.findByPk(userId);
+        const user = await Doctor.findByPk(req.decoded.userId);
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
+
         const alreadyRated = await Doctor_Malads.findOne({
-            where: { maladId, doctorId: userId },
+            where: { maladId, doctorId: req.decoded.userId },
         });
         if (alreadyRated) {
             return res.status(400).json({ message: "Malad already rated." });
         }
-        // await Doctor_Rates_to_Malads.create({ maladId, doctorId: userId, rating });
+        await Malad_Rates.create({
+            maladId,
+            doctorId: req.decoded.userId,
+            rating,
+            review,
+        });
         return res.status(200).json({ message: "Rating added successfully." });
     } catch (error) {
         console.error(error);
