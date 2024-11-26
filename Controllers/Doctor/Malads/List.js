@@ -3,7 +3,6 @@ const { Company } = require("../../../Models/Company");
 const { Doctor } = require("../../../Models/Doctor");
 const { Doctor_Malads } = require("../../../Models/Doctor");
 const add_malads_to_list = async (req, res) => {
-    console.log("hi");
 
     const { maladId, userId } = req.params;
     if (!maladId || !userId) {
