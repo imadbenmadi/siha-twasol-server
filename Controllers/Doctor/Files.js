@@ -64,6 +64,10 @@ const upload_file = async (req, res) => {
     if (!maladId) {
         return res.status(400).json({ message: "maladId is required." });
     }
+    const Title = req.body.Title;
+    if (!Title) {
+        return res.status(400).json({ message: "Title is required." });
+    }
 
     try {
         const malad = await Malad.findOne({
@@ -73,23 +77,21 @@ const upload_file = async (req, res) => {
             return res.status(404).json({ message: "Malad not found." });
         }
 
-        if (!req.files || !req.files.file) {
-            return res.status(400).json({ message: "file is required." });
-        }
-
         const file = req.files.file;
-        const fileName = `${Date.now()}_${file.name}`;
-        const filePath = path.join(
-            __dirname,
-            "../../../",
-            "public/Malads_Files/",
-            fileName
-        );
-        file.mv(filePath);
+        if (!file) {
+            return res.status(400).json({ message: "File is required." });
+        }
+        const fileExtension = path.extname(file.name).toLocaleLowerCase();
+
+        let uniqueSuffix = `Malads_Files-${maladId}-${Date.now()}${fileExtension}`;
+        const targetPath = path.join("public/Malads_Files/", uniqueSuffix);
+        fs.copyFileSync(file.path, targetPath);
+        fs.unlinkSync(file.path);
+
 
         await Malad_Files.create({
             Title: req.body.Title,
-            file_link: `uploads/${fileName}`,
+            file_link: `Malads_Files/${uniqueSuffix}`,
             maladId,
             doctorId: req.params.userId,
         });

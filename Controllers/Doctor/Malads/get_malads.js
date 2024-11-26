@@ -71,15 +71,12 @@ const get_own_malads = async (req, res) => {
                 {
                     model: Malad,
                 },
-                {
-                    model: Malad_Files,
-                },
+
                 // {
                 //     model: Doctor,
                 // },
             ],
         });
-        console.log(malads);
 
         return res.status(200).json({ malads });
     } catch (error) {
@@ -102,6 +99,9 @@ const get_own_malad_by_id = async (req, res) => {
                 },
             ],
         });
+        const malad_files = await Malad_Files.findAll({
+            where: { maladId: maladId },
+        });
         if (!malad) {
             return res.status(404).json({ message: "Malad not found." });
         }
@@ -121,7 +121,9 @@ const get_own_malad_by_id = async (req, res) => {
                 },
             ],
         });
-        return res.status(200).json({ malad, is_rated, maladrates });
+        return res
+            .status(200)
+            .json({ malad, is_rated, maladrates, malad_files });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Internal server error." });

@@ -151,7 +151,7 @@ router.put(
 );
 
 router.post(
-    "/:userId/:companyId/Files",
+    "/:userId/Malads/:maladId/Files",
     (req, res, next) => {
         req.body = req.fields;
         next();

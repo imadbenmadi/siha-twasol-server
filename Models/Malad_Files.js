@@ -35,4 +35,4 @@ Malad_Files.belongsTo(Doctor, {
 });
 Doctor.hasMany(Malad_Files, { foreignKey: "doctorId" });
 
-module.exports = Malad_Files;
+module.exports = { Malad_Files };
