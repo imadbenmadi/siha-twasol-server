@@ -48,7 +48,6 @@ router.get(
     DoctorController.MaladsController.get_by_id
 );
 
-
 router.post(
     "/:userId/Malads/:maladId/Add",
     Doctor_Middlware,
@@ -77,6 +76,18 @@ router.get(
     DoctorController.Events_controller.get_by_id
 );
 // _____________________________
+
+router.get(
+    "/:userId/:companyId/Files/:fileId",
+    Doctor_Middlware,
+    DoctorController.Files_controller.get_file
+);
+router.delete(
+    "/:userId/:companyId/Files/:fileId",
+    Doctor_Middlware,
+    DoctorController.Files_controller.delete_file
+);
+
 // Formidable images
 const cookieParser = require("cookie-parser");
 const formidableMiddleware = require("express-formidable");
@@ -138,4 +149,15 @@ router.put(
     Doctor_Middlware,
     DoctorController.Events_controller.edit_event
 );
+
+router.post(
+    "/:userId/:companyId/Files",
+    (req, res, next) => {
+        req.body = req.fields;
+        next();
+    },
+    Doctor_Middlware,
+    DoctorController.Files_controller.upload_file
+);
+
 module.exports = router;

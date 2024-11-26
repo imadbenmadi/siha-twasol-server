@@ -3,6 +3,7 @@ const { Company } = require("../../../Models/Company");
 const { Doctor } = require("../../../Models/Doctor");
 const { Doctor_Malads } = require("../../../Models/Doctor");
 const { Malad_Rates } = require("../../../Models/Rates");
+const { Malad_Files } = require("../../../Models/Malad_Files");
 const Sequelize = require("sequelize");
 // Get all malads
 const get_All = async (req, res) => {
@@ -69,6 +70,9 @@ const get_own_malads = async (req, res) => {
             include: [
                 {
                     model: Malad,
+                },
+                {
+                    model: Malad_Files,
                 },
                 // {
                 //     model: Doctor,
