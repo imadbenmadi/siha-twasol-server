@@ -14,6 +14,7 @@ const get_events = async (req, res) => {
         const followedCompanies = await Company_Followers.findAll({
             where: { maladId: userId },
             attributes: ["companyId"],
+            order: [["createdAt", "DESC"]],
         });
 
         // Extract company IDs from the followed companies

@@ -13,6 +13,9 @@ const get_All = async (req, res) => {
             { where: { companyId: req.params.companyId } },
             {
                 include: [{ model: Company }],
+            },
+            {
+                order: [["createdAt", "DESC"]],
             }
         );
         return res.status(200).json({ blogs });

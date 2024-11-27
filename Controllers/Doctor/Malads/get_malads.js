@@ -16,8 +16,11 @@ const get_All = async (req, res) => {
 
         const malads = await Malad.findAll({
             where: {
-                id: { [Sequelize.Op.notIn]: ownedMaladIds },
+                id: {
+                    [Op.notIn]: ownedMaladIds, // ownedMaladIds should be an array
+                },
             },
+            order: [["createdAt", "DESC"]],
         });
 
         return res.status(200).json({ malads });
@@ -76,6 +79,7 @@ const get_own_malads = async (req, res) => {
                 //     model: Doctor,
                 // },
             ],
+            order: [["createdAt", "DESC"]],
         });
 
         return res.status(200).json({ malads });

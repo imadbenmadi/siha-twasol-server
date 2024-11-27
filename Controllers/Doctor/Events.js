@@ -7,14 +7,23 @@ const get_All = async (req, res) => {
     if (!req.params.companyId) {
         return res.status(400).json({ message: "companyId is required." });
     }
+
     try {
-        const events = await Event.findAll(
-            { where: { companyId: req.params.companyId } },
-            {
-                include: [{ model: Company }],
-            }
-        );
-        return res.status(200).json({ events });
+        const companyBlogs = await Blog.findAll({
+            where: { companyId: req.params.companyId },
+            include: [{ model: Company }],
+            order: [["createdAt", "DESC"]], // Sort by creation date, newest first
+        });
+
+        const otherBlogs = await Blog.findAll({
+            where: { companyId: { [Op.ne]: req.params.companyId } },
+            include: [{ model: Company }],
+            order: [["createdAt", "DESC"]], // Sort by creation date, newest first
+        });
+
+        const combinedBlogs = [...companyBlogs, ...otherBlogs];
+
+        return res.status(200).json({ blogs: combinedBlogs });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Internal server error." });
@@ -85,7 +94,6 @@ const edit_event = async (req, res) => {
         }
         // Handle image replacement if a new image file is provided
         if (image) {
-
             // Check MIME type or file extension as a fallback
             const allowedMimeTypes = [
                 "image/jpeg",

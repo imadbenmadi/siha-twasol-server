@@ -1,5 +1,4 @@
 const { Company_Followers } = require("../../Models/Compnay_Followers");
-const { Op } = require("sequelize");
 const { Company } = require("../../Models/Company");
 const { Blog } = require("../../Models/Blog");
 const { Worker } = require("../../Models/Worker");
@@ -14,6 +13,7 @@ const get_blogs = async (req, res) => {
         const followedCompanies = await Company_Followers.findAll({
             where: { maladId: userId },
             attributes: ["companyId"],
+            order: [["createdAt", "DESC"]],
         });
 
         // Extract company IDs from the followed companies

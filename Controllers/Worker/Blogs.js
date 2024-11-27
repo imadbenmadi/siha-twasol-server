@@ -12,6 +12,9 @@ const get_All = async (req, res) => {
             { where: { companyId: req.params.companyId } },
             {
                 include: [{ model: Company }],
+            },
+            {
+                order: [["createdAt", "DESC"]],
             }
         );
         return res.status(200).json({ blogs });
@@ -85,7 +88,6 @@ const edit_blog = async (req, res) => {
         }
         // Handle image replacement if a new image file is provided
         if (image) {
-
             // Check MIME type or file extension as a fallback
             const allowedMimeTypes = [
                 "image/jpeg",

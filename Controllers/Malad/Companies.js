@@ -11,6 +11,7 @@ const get_All = async (req, res) => {
                 { model: Service, as: "Services" },
                 { model: Doctor, as: "Doctors" },
             ],
+            order: [["createdAt", "DESC"]],
         });
         res.status(200).json(companies);
     } catch (error) {
