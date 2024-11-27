@@ -54,7 +54,7 @@ router.post(
     DoctorController.MaladsController.add_malads_to_list
 );
 router.delete(
-    "/:userId/Malads/:maladId/Remove",
+    "/:userId/Malads/:maladId",
     Doctor_Middlware,
     DoctorController.MaladsController.remove_malad_from_list
 );
