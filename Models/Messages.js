@@ -2,7 +2,16 @@ const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/db_connection");
 const { Malad } = require("./Malad");
 const { Doctor } = require("./Doctor");
-const Message = sequelize.define("Message", {
+
+const Messages = sequelize.define("Messages", {
+    message: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
+    // readed: {
+    //     type: DataTypes.BOOLEAN,
+    //     defaultValue: false,
+    // },
     senderId: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -12,26 +21,77 @@ const Message = sequelize.define("Message", {
         allowNull: false,
     },
     senderType: {
-        type: DataTypes.STRING,
-        allowNull: true,
+        type: DataTypes.ENUM("malad", "doctor", "admin"),
+        allowNull: false,
     },
     receiverType: {
-        type: DataTypes.STRING,
-        allowNull: true,
+        type: DataTypes.ENUM("malad", "doctor", "admin"),
+        allowNull: false,
     },
-    message: {
-        type: DataTypes.TEXT,
+    roomId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
 });
-Malad.hasMany(Message, { foreignKey: "senderId" });
-Doctor.hasMany(Message, { foreignKey: "senderId" });
-Message.belongsTo(Malad, { foreignKey: "senderId" });
-Message.belongsTo(Doctor, { foreignKey: "senderId" });
+const MessagesRoom = sequelize.define("MessagesRoom", {
+    maladId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    doctorId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    maladUnreadMessages: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+    },
+    doctorUnreadMessages: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+    },
+    adminUnreadMessages: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+    },
+});
+Messages.belongsTo(Malad, {
+    foreignKey: "senderId",
+    constraints: false,
+    as: "maladSender",
+});
+Messages.belongsTo(Doctor, {
+    foreignKey: "senderId",
+    constraints: false,
+    as: "doctorSender",
+});
+Messages.belongsTo(Malad, {
+    foreignKey: "receiverId",
+    constraints: false,
+    as: "maladReceiver",
+});
+Messages.belongsTo(Doctor, {
+    foreignKey: "receiverId",
+    constraints: false,
+    as: "doctorReceiver",
+});
+Messages.belongsTo(MessagesRoom, {
+    foreignKey: "roomId",
+    constraints: false,
+});
 
-Malad.hasMany(Message, { foreignKey: "receiverId" });
-Doctor.hasMany(Message, { foreignKey: "receiverId" });
-Message.belongsTo(Malad, { foreignKey: "receiverId" });
-Message.belongsTo(Doctor, { foreignKey: "receiverId" });
+MessagesRoom.hasMany(Messages, {
+    foreignKey: "roomId",
+    constraints: false,
+});
 
-module.exports = { Message };
+MessagesRoom.belongsTo(Malad, {
+    foreignKey: "maladId",
+    constraints: false,
+});
+MessagesRoom.belongsTo(Doctor, {
+    foreignKey: "doctorId",
+    constraints: false,
+});
+
+module.exports = { Messages, MessagesRoom };

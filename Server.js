@@ -61,6 +61,7 @@ app.use("/Doctors", require("./Routes/Doctor"));
 app.use("/Malads", require("./Routes/Malad"));
 
 app.use("/Privacy", require("./Routes/Privacy"));
+app.use("/Messages", require("./Routes/Messages"));
 
 app.listen(3000);
 
