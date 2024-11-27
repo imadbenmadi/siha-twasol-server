@@ -85,7 +85,6 @@ const edit_blog = async (req, res) => {
         }
         // Handle image replacement if a new image file is provided
         if (image) {
-            console.log("Uploaded image MIME type:", image.mimetype);
 
             // Check MIME type or file extension as a fallback
             const allowedMimeTypes = [
@@ -195,7 +194,6 @@ const delete_blog = async (req, res) => {
 // Add a new blog
 const add_blog = async (req, res) => {
     const { Title, Description, ownerId, ownerType, companyId } = req.body;
-    // console.log(req.body);
 
     if (!Title || !ownerId || !ownerType || !companyId) {
         return res.status(400).json({ message: "Missing required fields." });

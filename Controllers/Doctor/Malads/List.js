@@ -70,7 +70,6 @@ const remove_malad_from_list = async (req, res) => {
     if (!maladId || !userId) {
         return res.status(400).json({ message: "Missing required fields." });
     }
-    console.log(maladId, userId);
     
     try {
         const malad = await Malad.findByPk(maladId);

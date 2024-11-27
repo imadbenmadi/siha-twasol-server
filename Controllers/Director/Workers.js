@@ -98,12 +98,6 @@ const delet_worker = async (req, res) => {
 const add_worker = async (req, res) => {
     const { email, password, firstName, lastName, serviceId, companyId } =
         req.body;
-    // console.log("email", email);
-    // console.log("password", password);
-    // console.log("firstName", firstName);
-    // console.log("lastName", lastName);
-    // console.log("serviceId", serviceId);
-    // console.log("companyId", companyId);
 
     if (
         !email ||

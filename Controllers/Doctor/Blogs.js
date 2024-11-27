@@ -195,7 +195,6 @@ const delete_blog = async (req, res) => {
 // Add a new blog
 const add_blog = async (req, res) => {
     const { Title, Description, ownerId, ownerType, companyId } = req.body;
-    // console.log(req.body);
 
     if (!Title || !ownerId || !ownerType || !companyId) {
         return res.status(400).json({ message: "Missing required fields." });

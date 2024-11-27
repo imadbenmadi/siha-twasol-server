@@ -85,7 +85,6 @@ const edit_event = async (req, res) => {
         }
         // Handle image replacement if a new image file is provided
         if (image) {
-            console.log("Uploaded image MIME type:", image.mimetype);
 
             // Check MIME type or file extension as a fallback
             const allowedMimeTypes = [
