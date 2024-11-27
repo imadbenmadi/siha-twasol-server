@@ -255,22 +255,18 @@ const post_Malad_Message = async (req, res) => {
         if (message.length === 0) {
             return res.status(400).json({ error: "Message cannot be empty" });
         }
-        message = message.replace(/<[^>]*>?/gm, ""); // Remove HTML tags
-        message = message.replace(/\n+/g, " "); // Replace multiple newline characters with a single space
-        message = message.replace(/\s+/g, " ").trim(); // Replace multiple spaces with a single space and trim again
-
         const malad = await Malad.findByPk(maladId);
         if (!malad) {
             return res.status(404).json({ error: "Malad not found" });
         }
-
-        // Check if the doctor exists
         const doctor = await Doctor.findByPk(doctorId);
         if (!doctor) {
             return res.status(404).json({ error: "Doctor not found" });
         }
+        message = message.replace(/<[^>]*>?/gm, ""); // Remove HTML tags
+        message = message.replace(/\n+/g, " "); // Replace multiple newline characters with a single space
+        message = message.replace(/\s+/g, " ").trim(); // Replace multiple spaces with a single space and trim again
 
-        // Create new message
         const newMessage = await Messages.create({
             message,
             senderId: maladId,
@@ -280,7 +276,6 @@ const post_Malad_Message = async (req, res) => {
             roomId,
         });
 
-        // Update unread messages count
         await MessagesRoom.update(
             {
                 doctorUnreadMessages: Sequelize.literal(
@@ -312,22 +307,19 @@ const post_Doctor_Message = async (req, res) => {
         if (message.length === 0) {
             return res.status(400).json({ error: "Message cannot be empty" });
         }
-        message = message.replace(/<[^>]*>?/gm, ""); // Remove HTML tags
-        message = message.replace(/\n+/g, " "); // Replace multiple newline characters with a single space
-        message = message.replace(/\s+/g, " ").trim(); // Replace multiple spaces with a single space and trim again
-
         const doctor = await Doctor.findByPk(doctorId);
         if (!doctor) {
             return res.status(404).json({ error: "Doctor not found" });
         }
 
-        // Check if the malad exists
         const malad = await Malad.findByPk(maladId);
         if (!malad) {
             return res.status(404).json({ error: "Malad not found" });
         }
+        message = message.replace(/<[^>]*>?/gm, ""); // Remove HTML tags
+        message = message.replace(/\n+/g, " "); // Replace multiple newline characters with a single space
+        message = message.replace(/\s+/g, " ").trim(); // Replace multiple spaces with a single space and trim again
 
-        // Create new message
         const newMessage = await Messages.create({
             message,
             senderId: doctorId,
@@ -337,7 +329,6 @@ const post_Doctor_Message = async (req, res) => {
             roomId,
         });
 
-        // Update unread messages count
         await MessagesRoom.update(
             {
                 maladUnreadMessages: Sequelize.literal(
