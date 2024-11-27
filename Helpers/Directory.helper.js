@@ -16,12 +16,13 @@ const initializeDirectories = () => {
         "public/Blog_Pics",
         "public/Event_Pics",
         "public/ProfilePics",
+        "public/Malads_Files",
         // "public/Summaries",
         // "public/Summaries_Pictures",
     ];
 
     directories.forEach((dir) => {
-        ensureDirectoryExists(path.join(__dirname,"../", dir));
+        ensureDirectoryExists(path.join(__dirname, "../", dir));
     });
 };
 
