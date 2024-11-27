@@ -158,7 +158,10 @@ const fetchMessages = async (roomId) => {
 const get_Malad_ChatRoom = async (req, res) => {
     try {
         const { maladId, roomId } = req.params;
-
+        if (isNaN(maladId) || isNaN(roomId)) {
+            return res.status(400).json({ error: "Invalid ID" });
+        }
+        
         // Fetch the messages in the room
         const messages = await fetchMessages(roomId);
 
@@ -201,7 +204,9 @@ const get_Malad_ChatRoom = async (req, res) => {
 const get_Doctor_ChatRoom = async (req, res) => {
     try {
         const { doctorId, roomId } = req.params;
-
+        if (isNaN(doctorId) || isNaN(roomId)) {
+            return res.status(400).json({ error: "Invalid ID" });
+        }
         // Fetch the messages in the room
         const messages = await fetchMessages(roomId);
 
