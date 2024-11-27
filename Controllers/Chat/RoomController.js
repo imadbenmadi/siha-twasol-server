@@ -1,5 +1,5 @@
 const { Messages } = require("../../Models/Messages");
-const { Malad } = require("../../Models/Freelnacer");
+const { Malad } = require("../../Models/Malad");
 const { Doctor } = require("../../Models/Doctor");
 const { MessagesRoom } = require("../../Models/Messages");
 
