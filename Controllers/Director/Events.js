@@ -2,6 +2,9 @@ const { Event } = require("../../Models/Event");
 const { Company } = require("../../Models/Company");
 const fs = require("fs");
 const path = require("path");
+const { Company_Followers } = require("../../Models/Compnay_Followers");
+const { Malad_Notifications } = require("../../Models/Notifications");
+const { Op } = require("sequelize");
 // Get all events
 const get_All = async (req, res) => {
     if (!req.params.companyId) {
@@ -213,6 +216,55 @@ const add_event = async (req, res) => {
             companyId,
             image_link: image ? `/Event_Pics/${uniqueSuffix}` : null,
         });
+        const eventWithCompany = await Event.findOne({
+            where: { id: event.id },
+            include: [{ model: Company }],
+        });
+        if (!eventWithCompany || !eventWithCompany.Company) {
+            if (eventWithCompany?.image_link) {
+                const previousFilename = eventWithCompany?.image_link
+                    .split("/")
+                    .pop();
+                const previousImagePath = `public/Event_Pics/${previousFilename}`;
+                try {
+                    if (fs.existsSync(previousImagePath)) {
+                        fs.unlinkSync(previousImagePath);
+                    }
+                } catch (error) {
+                    console.error(error);
+                    // return res.status(400).send({
+                    //     message:
+                    //         "Could not delete Event picture : " + error.message,
+                    // });
+                }
+            }
+            await eventWithCompany.destroy();
+            return res
+                .status(404)
+                .json({ message: "Company not found for the event." });
+        }
+
+        const company_followers = await Company_Followers.findAll({
+            where: { companyId },
+        });
+        const followerIds = company_followers.map(
+            (follower) => follower.maladId
+        );
+
+        await Promise.all(
+            followerIds.map((followerId) =>
+                Malad_Notifications.create({
+                    maladId: followerId,
+                    title: "حدث جديد",
+                    text: `تمت إضافة حدث جديد${
+                        "من المؤسسة \n" + (eventWithCompany.Company.Name || "")
+                    }.`,
+
+                    link: `/Malad/Events/${event.id}`,
+                })
+            )
+        );
+
         return res.status(200).json({ event });
     } catch (error) {
         console.error(error);

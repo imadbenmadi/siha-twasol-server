@@ -24,6 +24,17 @@ router.get(
     Malad_Middlware,
     MaladController.Doctor_Controller.get_Doctor
 );
+// _____________________________
+router.get(
+    "/:userId/Notifications",
+    Malad_Middlware,
+    MaladController.NotificationController.GetNotifications
+);
+router.delete(
+    "/:userId/Notifications/:notificationId",
+    Malad_Middlware,
+    MaladController.NotificationController.DeleteNotification
+);
 
 // _____________________________
 router.post(

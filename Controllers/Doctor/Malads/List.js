@@ -7,6 +7,7 @@ const { Messages } = require("../../../Models/Messages");
 const { Malad_Files } = require("../../../Models/Malad_Files");
 const fs = require("fs");
 const path = require("path");
+const { Malad_Notifications } = require("../../../Models/Notifications");
 
 const add_malads_to_list = async (req, res) => {
     const { maladId, userId } = req.params;
@@ -51,6 +52,12 @@ const add_malads_to_list = async (req, res) => {
             });
         }
 
+        await Malad_Notifications.create({
+            maladId,
+            title: "الدكتور أضافك إلى قائمته",
+            text: `الدكتور ${doctor.firstName} ${doctor.lastName} أضافك إلى قائمته.`,
+            link: `/Malad/Companies/${doctor.companyId}/Doctors/${doctor.id}`,
+        });
         // Return success response
         return res.status(200).json({
             message: "Malad added and chat room created successfully.",
@@ -70,7 +77,7 @@ const remove_malad_from_list = async (req, res) => {
     if (!maladId || !userId) {
         return res.status(400).json({ message: "Missing required fields." });
     }
-    
+
     try {
         const malad = await Malad.findByPk(maladId);
         if (!malad) {

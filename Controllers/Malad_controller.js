@@ -5,6 +5,7 @@ const Event_controller = require("./Malad/Events");
 const Follow_controller = require("./Malad/Follow");
 const Doctor_Controller = require("./Malad/Doctor");
 const RateController = require("./Malad/Rate");
+const NotificationController = require("./Malad/Notifications");
 const MaladController = {
     profile_controller,
     Company_controller,
@@ -13,5 +14,6 @@ const MaladController = {
     Event_controller,
     Follow_controller,
     RateController,
+    NotificationController,
 };
 module.exports = MaladController;

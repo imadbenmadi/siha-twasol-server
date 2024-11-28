@@ -2,6 +2,10 @@ const { Blog } = require("../../Models/Blog");
 const { Company } = require("../../Models/Company");
 const fs = require("fs");
 const path = require("path");
+const { Company_Followers } = require("../../Models/Compnay_Followers");
+const { Malad_Notifications } = require("../../Models/Notifications");
+const { Op } = require("sequelize");
+
 // Get all blogs
 const get_All = async (req, res) => {
     if (!req.params.companyId) {
@@ -232,6 +236,53 @@ const add_blog = async (req, res) => {
             companyId,
             image_link: image ? `/Blog_Pics/${uniqueSuffix}` : null,
         });
+        const blogWithCompany = await Blog.findOne({
+            where: { id: blog.id },
+            include: [{ model: Company }],
+        });
+        if (!blogWithCompany || !blogWithCompany.Company) {
+            if (blogWithCompany?.image_link) {
+                const previousFilename = blogWithCompany?.image_link
+                    .split("/")
+                    .pop();
+                const previousImagePath = `public/Blog_Pics/${previousFilename}`;
+                try {
+                    if (fs.existsSync(previousImagePath)) {
+                        fs.unlinkSync(previousImagePath);
+                    }
+                } catch (error) {
+                    console.error(error);
+                    // return res.status(400).send({
+                    //     message:
+                    //         "Could not delete Blog picture : " + error.message,
+                    // });
+                }
+            }
+            await blogWithCompany.destroy();
+            return res
+                .status(404)
+                .json({ message: "Company not found for the blog." });
+        }
+
+        const company_followers = await Company_Followers.findAll({
+            where: { companyId },
+        });
+        const followerIds = company_followers.map(
+            (follower) => follower.maladId
+        );
+
+        await Promise.all(
+            followerIds.map((followerId) =>
+                Malad_Notifications.create({
+                    maladId: followerId,
+                    title: "منشور جديد",
+                    text: `تمت إضافة مقال جديد${
+                        "من المؤسسة \n" + (blogWithCompany.Company.Name || "")
+                    }.`,
+                    link: `/Malad/Blogs/${blog.id}`,
+                })
+            )
+        );
         return res.status(200).json({ blog });
     } catch (error) {
         console.error(error);
