@@ -4,7 +4,6 @@ const fs = require("fs");
 const path = require("path");
 const { Company_Followers } = require("../../Models/Compnay_Followers");
 const { Malad_Notifications } = require("../../Models/Notifications");
-const { Op } = require("sequelize");
 
 // Get all blogs
 const get_All = async (req, res) => {

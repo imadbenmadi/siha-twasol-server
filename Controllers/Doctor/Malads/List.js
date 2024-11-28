@@ -1,12 +1,10 @@
 const { Malad } = require("../../../Models/Malad");
-const { Company } = require("../../../Models/Company");
 const { Doctor } = require("../../../Models/Doctor");
 const { Doctor_Malads } = require("../../../Models/Doctor");
 const { MessagesRoom } = require("../../../Models/Messages");
 const { Messages } = require("../../../Models/Messages");
 const { Malad_Files } = require("../../../Models/Malad_Files");
 const fs = require("fs");
-const path = require("path");
 const { Malad_Notifications } = require("../../../Models/Notifications");
 
 const add_malads_to_list = async (req, res) => {

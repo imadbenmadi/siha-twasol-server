@@ -1,11 +1,9 @@
 const { Malad } = require("../../../Models/Malad");
-const { Company } = require("../../../Models/Company");
 const { Doctor } = require("../../../Models/Doctor");
 const { Doctor_Malads } = require("../../../Models/Doctor");
 const { Malad_Rates } = require("../../../Models/Rates");
 const { Malad_Files } = require("../../../Models/Malad_Files");
 const { Op } = require("sequelize");
-const Sequelize = require("sequelize");
 // Get all malads
 const get_All = async (req, res) => {
     try {

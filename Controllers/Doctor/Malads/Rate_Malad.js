@@ -1,8 +1,7 @@
 const { Malad } = require("../../../Models/Malad");
-const { Company } = require("../../../Models/Company");
 const { Doctor } = require("../../../Models/Doctor");
 const { Doctor_Malads } = require("../../../Models/Doctor");
-const { Malad_Rates, Doctor_Rates } = require("../../../Models/Rates");
+const { Malad_Rates } = require("../../../Models/Rates");
 const rate_malad = async (req, res) => {
     const { maladId } = req.params;
     const { rating, review } = req.body;
